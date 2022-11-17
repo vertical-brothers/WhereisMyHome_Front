@@ -10,6 +10,7 @@ import BoardDetail from "@/components/board/BoardDetail.vue";
 import BoardModify from "@/components/board/BoardModify.vue";
 import BoardWrite from "@/components/board/BoardWrite.vue";
 import KakaoMap from "@/components/apt/map/KakaoMap.vue";
+import AptDetail from "@/components/apt/info/AptOverlay.vue";
 
 Vue.use(VueRouter);
 
@@ -74,6 +75,11 @@ const routes = [
         path: "map",
         name: "map",
         component: KakaoMap,
+      },
+      {
+        path: "AptDetail",
+        name: "AptDetail",
+        component: AptDetail,
       },
     ],
   },

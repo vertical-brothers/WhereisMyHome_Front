@@ -9,6 +9,7 @@ import BoardList from "@/components/board/BoardList.vue";
 import BoardDetail from "@/components/board/BoardDetail.vue";
 import BoardModify from "@/components/board/BoardModify.vue";
 import BoardWrite from "@/components/board/BoardWrite.vue";
+import KakaoMap from "@/components/apt/map/KakaoMap.vue";
 
 Vue.use(VueRouter);
 
@@ -66,9 +67,15 @@ const routes = [
   {
     path: "/apt",
     name: "apt",
-    commentt: AptView,
-    redirect: "/apt/aptList",
-    children: [],
+    component: AptView,
+    // redirect: "/apt/",
+    children: [
+      {
+        path: "map",
+        name: "map",
+        component: KakaoMap,
+      },
+    ],
   },
 ];
 

@@ -1,12 +1,14 @@
 <template>
   <div class="home">
-    <router-view></router-view>
+    <h1>test</h1>
+    <kakao-map />
   </div>
 </template>
 
 <script>
+import KakaoMap from "@/components/apt/map/KakaoMap.vue";
 export default {
   name: "AptView",
-  components: {},
+  components: { KakaoMap },
 };
 </script>

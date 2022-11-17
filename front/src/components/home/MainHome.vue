@@ -12,7 +12,12 @@
         <div class="carousel-caption d-flex flex-column align-items-center">
           <div class="display-1 mb-3">Happy House</div>
           <div class="input-group w-75">
-            <input
+            <b-form-select
+              class="form-select form-select-sm ms-10 me-1 w-5"
+              v-model="selected"
+              :options="options"
+            ></b-form-select>
+            <b-form-input
               @keyup.enter="search"
               type="text"
               v-model="keyword"
@@ -61,16 +66,50 @@
 </template>
 
 <script>
+// import { aptCodeList, dongCodeList, apartmentNameList } from "@/api/house";
 export default {
   name: "MainHome",
   data() {
     return {
       thumbNail: require("@/assets/home_apartment.jpg"),
       keyword: "",
+
+      selected: null,
+      options: [
+        { value: null, text: "검색 조건" },
+        { value: "aptCode", text: "아파트 코드" },
+        { value: "dongCode", text: "동 코드" },
+        { value: "apartmentName", text: "아파트 이름" },
+      ],
     };
   },
   methods: {
-    search() {},
+    search() {
+      if (this.keyword == "") {
+        alert("검색어를 입력해주세요!");
+        return;
+      }
+      if (this.selected == null) {
+        alert("카테고리를 설정해주세요!");
+        return;
+      }
+
+      if (this.selected == "aptCode") {
+        this.searchAptCode();
+      } else if (this.selected == "dongCode") {
+        this.searchDongCode();
+      } else {
+        this.searchApartmentName();
+      }
+    },
+    searchAptCode() {
+      // aptCodeList(this.keyword, (response=>{
+      //     data = response.data;
+      // }))
+      this.$router.push(`/apt/${this.keyword}`);
+    },
+    searchDongCode() {},
+    searchApartmentName() {},
   },
 };
 </script>

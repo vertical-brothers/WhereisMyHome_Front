@@ -3,7 +3,7 @@
     <div>
       <button @click="showDetail">테스트</button>
     </div>
-    <div id="map" style="position: absolute"></div>
+    <div id="map" @click="closeOverlay"></div>
   </div>
 </template>
 <script>
@@ -58,6 +58,9 @@ export default {
       //지도 객체는 반응형 관리 대상이 아니므로 initMap에서 선언합니다.
       this.map = new kakao.maps.Map(container, options);
     },
+    closeOverlay() {
+      this.SET_CLEAR_HOUSE();
+    },
     showDetail() {
       this.detailHouse("11110000000002");
     },
@@ -67,7 +70,8 @@ export default {
 
 <style scoped>
 #map {
-  width: 400px;
-  height: 400px;
+  width: 100%;
+  height: 100%;
+  position: absolute;
 }
 </style>

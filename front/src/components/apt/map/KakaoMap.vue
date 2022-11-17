@@ -17,9 +17,8 @@ export default {
   data() {
     return {
       map: null,
-
       aptList: [],
-
+      markers: [],
       aptCode: null,
       dongCode: null,
       houseName: null,
@@ -44,8 +43,26 @@ export default {
     if (this.searchOption) {
       if (this.searchOption === "apartmentName") {
         this.getHouseListByAptname(this.searchKeyword);
-        console.log(this.houselist);
+
+        for (var i = 0; i < this.houselist.length; i++) {
+          let h = this.houselist[i];
+          this.markers.push(
+            new kakao.maps.Marker({
+              position: new kakao.maps.LatLng(h.lat, h.lng),
+              clickable: true,
+            })
+          );
+          kakao.maps.event.addListener(this.markers[i], "click", () => {
+            // 마커 위에 인포윈도우를 표시합니다
+            this.showDetail(h.aptCode);
+          });
+        }
+
+        this.setMarkers(this.map);
+        this.CLEAR_SEARCH();
       }
+    } else {
+      this.setMarkers(null);
     }
   },
 
@@ -55,6 +72,7 @@ export default {
   methods: {
     ...mapActions(aptDetailStore, ["detailHouse", "getHouseListByAptname"]),
     ...mapMutations(aptDetailStore, ["CLEAR_HOUSE"]),
+    ...mapMutations(mainStore, ["CLEAR_SEARCH"]),
     initMap() {
       const container = document.getElementById("map");
       const options = {
@@ -69,8 +87,13 @@ export default {
     closeOverlay() {
       this.CLEAR_HOUSE();
     },
-    showDetail() {
-      this.detailHouse("11110000000002");
+    showDetail(aptCode) {
+      this.detailHouse(aptCode);
+    },
+    setMarkers(map) {
+      for (var i = 0; i < this.markers.length; i++) {
+        this.markers[i].setMap(map);
+      }
     },
   },
   computed: {

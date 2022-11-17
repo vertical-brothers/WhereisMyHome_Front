@@ -15,6 +15,10 @@ const mainStore = {
       state.searchOption = searchOption[0];
       state.searchKeyword = searchOption[1];
     },
+    CLEAR_SEARCH(state) {
+      state.searchKeyword = null;
+      state.searchOption = null;
+    },
   },
 };
 export default mainStore;

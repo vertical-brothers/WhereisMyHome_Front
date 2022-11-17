@@ -1,7 +1,7 @@
-import { apiInstance, houseInstance } from "@/api/index.js";
+import { apiInstance } from "@/api/index.js";
 
 const api = apiInstance();
-const house = houseInstance();
+const house = apiInstance();
 
 function sidoList(success, fail) {
   api.get(`/map/sido`).then(success).catch(fail);

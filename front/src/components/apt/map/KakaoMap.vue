@@ -1,10 +1,15 @@
 <template>
   <div>
+    <div>
+      <button @click="showDetail">테스트</button>
+    </div>
     <div id="map" style="position: absolute"></div>
   </div>
 </template>
 <script>
 import { KAKAO_MAP_KEY } from "@/config";
+import { mapActions, mapMutations } from "vuex";
+const aptDetailStore = "aptDetailStore";
 // import { dongCodeList, houseNameList, aptCodeList } from "@/api/house";
 export default {
   name: "KakaoMap",
@@ -21,7 +26,6 @@ export default {
   },
   mounted() {
     // const script = document.createElement(script);
-
     if (window.kakao && window.kakao.maps) {
       console.log("already loaded", window.kakao);
       this.initMap();
@@ -41,6 +45,8 @@ export default {
     this.aptList = this.$route.params.data;
   },
   methods: {
+    ...mapActions(aptDetailStore, ["detailHouse"]),
+    ...mapMutations(aptDetailStore, ["SET_CLEAR_HOUSE"]),
     initMap() {
       const container = document.getElementById("map");
       const options = {
@@ -51,6 +57,9 @@ export default {
       //지도 객체를 등록합니다.
       //지도 객체는 반응형 관리 대상이 아니므로 initMap에서 선언합니다.
       this.map = new kakao.maps.Map(container, options);
+    },
+    showDetail() {
+      this.detailHouse("11110000000002");
     },
   },
 };

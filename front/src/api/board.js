@@ -10,7 +10,7 @@ function listArticle(param, success, fail) {
 }
 
 function writeArticle(article, success, fail) {
-  api.post(`/board`, JSON.stringify(article)).then(success).catch(fail);
+  api.post(`/board/`, JSON.stringify(article)).then(success).catch(fail);
 }
 
 function getArticle(articleno, success, fail) {

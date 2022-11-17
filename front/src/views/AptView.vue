@@ -1,6 +1,5 @@
 <template>
   <div class="home">
-    <h1>test</h1>
     <kakao-map />
   </div>
 </template>

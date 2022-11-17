@@ -5,11 +5,18 @@
 </template>
 <script>
 import { KAKAO_MAP_KEY } from "@/config";
+// import { dongCodeList, houseNameList, aptCodeList } from "@/api/house";
 export default {
   name: "KakaoMap",
   data() {
     return {
       map: null,
+
+      aptList: [],
+
+      aptCode: null,
+      dongCode: null,
+      houseName: null,
     };
   },
   mounted() {
@@ -28,6 +35,10 @@ export default {
       });
       document.head.appendChild(script);
     }
+  },
+
+  created() {
+    this.aptList = this.$route.params.data;
   },
   methods: {
     initMap() {

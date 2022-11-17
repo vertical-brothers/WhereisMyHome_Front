@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div id="map"></div>
+    <div id="map" style="position: absolute"></div>
   </div>
 </template>
 <script>

@@ -8,8 +8,9 @@
 </template>
 <script>
 import { KAKAO_MAP_KEY } from "@/config";
-import { mapActions, mapMutations } from "vuex";
+import { mapActions, mapMutations, mapState } from "vuex";
 const aptDetailStore = "aptDetailStore";
+const mainStore = "mainStore";
 // import { dongCodeList, houseNameList, aptCodeList } from "@/api/house";
 export default {
   name: "KakaoMap",
@@ -39,14 +40,21 @@ export default {
       });
       document.head.appendChild(script);
     }
+    console.log(this.searchKeyword);
+    if (this.searchOption) {
+      if (this.searchOption === "apartmentName") {
+        this.getHouseListByAptname(this.searchKeyword);
+        console.log(this.houselist);
+      }
+    }
   },
 
   created() {
     this.aptList = this.$route.params.data;
   },
   methods: {
-    ...mapActions(aptDetailStore, ["detailHouse"]),
-    ...mapMutations(aptDetailStore, ["SET_CLEAR_HOUSE"]),
+    ...mapActions(aptDetailStore, ["detailHouse", "getHouseListByAptname"]),
+    ...mapMutations(aptDetailStore, ["CLEAR_HOUSE"]),
     initMap() {
       const container = document.getElementById("map");
       const options = {
@@ -59,11 +67,15 @@ export default {
       this.map = new kakao.maps.Map(container, options);
     },
     closeOverlay() {
-      this.SET_CLEAR_HOUSE();
+      this.CLEAR_HOUSE();
     },
     showDetail() {
       this.detailHouse("11110000000002");
     },
+  },
+  computed: {
+    ...mapState(mainStore, ["searchKeyword", "searchOption"]),
+    ...mapState(aptDetailStore, ["houselist"]),
   },
 };
 </script>

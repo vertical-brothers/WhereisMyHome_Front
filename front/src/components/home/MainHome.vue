@@ -67,6 +67,8 @@
 
 <script>
 // import { aptCodeList, dongCodeList, apartmentNameList } from "@/api/house";
+import { mapMutations, mapState } from "vuex";
+const mainStore = "mainStore";
 export default {
   name: "MainHome",
   data() {
@@ -77,13 +79,13 @@ export default {
       selected: null,
       options: [
         { value: null, text: "검색 조건" },
-        { value: "aptCode", text: "아파트 코드" },
-        { value: "dongCode", text: "동 코드" },
+        { value: "dongName", text: "동 이름" },
         { value: "apartmentName", text: "아파트 이름" },
       ],
     };
   },
   methods: {
+    ...mapMutations(mainStore, ["SET_SEARCH"]),
     search() {
       if (this.keyword == "") {
         alert("검색어를 입력해주세요!");
@@ -94,22 +96,20 @@ export default {
         return;
       }
 
-      if (this.selected == "aptCode") {
-        this.searchAptCode();
-      } else if (this.selected == "dongCode") {
-        this.searchDongCode();
-      } else {
+      if (this.selected == "dongName") {
+        this.searchDongName();
+      } else if (this.selected == "apartmentName") {
         this.searchApartmentName();
       }
     },
-    searchAptCode() {
-      // aptCodeList(this.keyword, (response=>{
-      //     data = response.data;
-      // }))
-      this.$router.push(`/apt/${this.keyword}`);
+    searchDongName() {},
+    searchApartmentName() {
+      this.SET_SEARCH([this.selected, this.keyword]);
+      this.$router.push({ name: "apt" });
     },
-    searchDongCode() {},
-    searchApartmentName() {},
+  },
+  computed: {
+    ...mapState(mainStore, ["searchKeyword", "searchOption"]),
   },
 };
 </script>

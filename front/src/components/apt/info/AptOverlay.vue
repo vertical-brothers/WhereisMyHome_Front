@@ -93,10 +93,10 @@ export default {
     return {};
   },
   methods: {
-    ...mapMutations(aptDetailStore, ["SET_CLEAR_HOUSE"]),
+    ...mapMutations(aptDetailStore, ["CLEAR_HOUSE"]),
     likeApt() {},
     close() {
-      this.SET_CLEAR_HOUSE();
+      this.CLEAR_HOUSE();
     },
   },
   computed: {

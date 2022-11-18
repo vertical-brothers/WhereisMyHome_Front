@@ -74,7 +74,7 @@
 <script>
 import { mapState, mapGetters, mapActions } from "vuex";
 
-const memberStore = "memberStore";
+const userStore = "userStore";
 
 export default {
   name: "HeaderBar",
@@ -88,12 +88,12 @@ export default {
     };
   },
   computed: {
-    ...mapState(memberStore, ["isLogin", "userInfo"]),
+    ...mapState(userStore, ["isLogin", "userInfo"]),
     ...mapGetters(["checkUserInfo"]),
   },
   created() {},
   methods: {
-    ...mapActions(memberStore, ["userLogout"]),
+    ...mapActions(userStore, ["userLogout"]),
     // ...mapMutations(memberStore, ["SET_IS_LOGIN", "SET_USER_INFO"]),
     onClickLogout() {
       // this.SET_IS_LOGIN(false);

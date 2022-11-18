@@ -96,14 +96,9 @@ export default {
         return;
       }
 
-      if (this.selected == "dongName") {
-        this.searchDongName();
-      } else if (this.selected == "apartmentName") {
-        this.searchApartmentName();
-      }
+      this.goSearch();
     },
-    searchDongName() {},
-    searchApartmentName() {
+    goSearch() {
       this.SET_SEARCH([this.selected, this.keyword]);
       this.$router.push({ name: "apt" });
     },

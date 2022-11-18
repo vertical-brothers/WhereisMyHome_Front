@@ -35,7 +35,11 @@ export default {
     this.aptList = this.$route.params.data;
   },
   methods: {
-    ...mapActions(aptDetailStore, ["detailHouse", "getHouseListByAptname"]),
+    ...mapActions(aptDetailStore, [
+      "detailHouse",
+      "getHouseListByAptname",
+      "getHouseListByDongname",
+    ]),
     ...mapMutations(aptDetailStore, ["CLEAR_HOUSE"]),
     ...mapMutations(mainStore, ["CLEAR_SEARCH"]),
     // 지도 객체 등록 22.11.17 이인재
@@ -84,38 +88,60 @@ export default {
         document.head.appendChild(script);
       }
     },
-    // this.marker 생성하는 함수
+    // 검색조건 받아서 마커생성 함수 호출
     // 검색조건 있을때만 동작
     // 22.11.17 장한결
     loadMarkers() {
+      // 1. 마커 전부 제거
       this.setMarkers(null);
-      console.log("검색 옵션", this.searchOption);
-      console.log("검색 키워드", this.searchKeyword);
+      console.log(
+        "검색 옵션",
+        this.searchOption,
+        "검색 키워드",
+        this.searchKeyword
+      );
       if (this.searchOption) {
         // 검색 조건 아파트명
         if (this.searchOption === "apartmentName") {
           this.getHouseListByAptname(this.searchKeyword);
-          for (var i = 0; i < this.houselist.length; i++) {
-            let h = this.houselist[i];
-            // 클릭가능한 마커 생성
-            this.markers.push(
-              new kakao.maps.Marker({
-                position: new kakao.maps.LatLng(h.lat, h.lng),
-                clickable: true,
-              })
-            );
-            // 클릭시 화면 우측 오버레이 생성 이벤트 부착
-            kakao.maps.event.addListener(this.markers[i], "click", () => {
-              this.showDetail(h.aptCode);
-            });
-          }
-          console.log("markers created", this.markers);
+          this.createMarkers();
+          this.setMarkers(this.map);
+          this.CLEAR_SEARCH();
+          // 검색 조건 동이름
+        } else if (this.searchOption === "dongName") {
+          this.getHouseListByDongname(this.searchKeyword);
+          this.createMarkers();
           this.setMarkers(this.map);
           this.CLEAR_SEARCH();
         }
       }
     },
+    // this.marker 생성하는 함수
+    // 22.11.18 장한결
+    createMarkers() {
+      for (var i = 0; i < this.houselist.length; i++) {
+        let h = this.houselist[i];
+        // 클릭가능한 마커 생성
+        this.markers.push(
+          new kakao.maps.Marker({
+            position: new kakao.maps.LatLng(h.lat, h.lng),
+            clickable: true,
+          })
+        );
+        // 클릭시 화면 우측 오버레이 생성 이벤트 부착
+        kakao.maps.event.addListener(this.markers[i], "click", () => {
+          this.showDetail(h.aptCode);
+        });
+      }
+      console.log(
+        "markers created with ",
+        this.searchOption,
+        this.searchKeyword,
+        this.markers
+      );
+    },
   },
+
   computed: {
     ...mapState(mainStore, ["searchKeyword", "searchOption"]),
     ...mapState(aptDetailStore, ["houselist"]),

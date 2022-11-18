@@ -1,4 +1,4 @@
-import { aptCodeList, houseNameList } from "@/api/house.js";
+import { aptCodeList, houseNameList, searchByDongName } from "@/api/house.js";
 
 /*
 아파트 관련 통신 vuex
@@ -58,6 +58,23 @@ const aptDetailStore = {
     getHouseListByAptname: ({ commit }, aptName) => {
       houseNameList(
         aptName,
+        ({ data }) => {
+          //console.log(data);
+          commit("SET_HOUSE_LIST", data);
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    },
+    /* 동 이름으로 아파트 정보 가져오기 (비동기 호출)
+    input : dongName 
+    output : houses[]
+    22.11.17 장한결
+    */
+    getHouseListByDongname: ({ commit }, dongName) => {
+      searchByDongName(
+        dongName,
         ({ data }) => {
           //console.log(data);
           commit("SET_HOUSE_LIST", data);

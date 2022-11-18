@@ -29,10 +29,18 @@ function dongCodeList(dongCode, success, fail) {
 }
 
 /*
-아파트 이름을 통해 리스트를 받아오는 요청
+아파트 이름을 통해 아파트 정보를 받아오는 요청
 */
 function houseNameList(apartmentName, success, fail) {
   api.get(`/houseinfo/name/${apartmentName}`).then(success).catch(fail);
+}
+
+/* 
+동 이름을 통해 아파트 정보를 받아오는 요청
+return : list
+*/
+function searchByDongName(dongName, success, fail) {
+  api.get(`/houseinfo/dongName/${dongName}`).then(success).catch(fail);
 }
 
 export {
@@ -42,4 +50,5 @@ export {
   aptCodeList,
   dongCodeList,
   houseNameList,
+  searchByDongName,
 };

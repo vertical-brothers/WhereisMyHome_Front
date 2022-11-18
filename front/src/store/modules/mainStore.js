@@ -9,6 +9,8 @@ const mainStore = {
     searchKeyword: "",
     searchOption: "",
     aptList: [],
+    map: null,
+    markers: [],
   },
   mutations: {
     SET_SEARCH(state, searchOption) {
@@ -18,6 +20,18 @@ const mainStore = {
     CLEAR_SEARCH(state) {
       state.searchKeyword = null;
       state.searchOption = null;
+    },
+    SET_MAP(state, map) {
+      state.map = map;
+    },
+    CLEAR_MAP(state) {
+      state.map = null;
+    },
+    SET_MARKERS(state, markers) {
+      state.markers = markers;
+    },
+    CLEAR_MARKERS(state) {
+      state.markers = [];
     },
   },
 };

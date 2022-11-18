@@ -1,8 +1,5 @@
 <template>
   <div>
-    <div>
-      <button @click="showDetail">테스트</button>
-    </div>
     <div id="map" @click="closeOverlay"></div>
   </div>
 </template>
@@ -16,12 +13,11 @@ export default {
   name: "KakaoMap",
   data() {
     return {
-      map: null,
-      aptList: [],
-      markers: [],
+      markerLocal: [],
       aptCode: null,
       dongCode: null,
       houseName: null,
+      zoomLevel: 4,
     };
   },
   mounted() {
@@ -29,6 +25,13 @@ export default {
     //console.log(this.searchKeyword);
     this.loadMap();
     this.loadMarkers();
+    if (this.houselist.length > 0) {
+      this.mapCenterMove(
+        this.houselist[0].lat,
+        this.houselist[0].lng,
+        this.zoomLevel
+      );
+    }
   },
 
   created() {
@@ -40,8 +43,13 @@ export default {
       "getHouseListByAptname",
       "getHouseListByDongname",
     ]),
-    ...mapMutations(aptDetailStore, ["CLEAR_HOUSE"]),
-    ...mapMutations(mainStore, ["CLEAR_SEARCH"]),
+    ...mapMutations(aptDetailStore, ["CLEAR_HOUSE", "CLEAR_HOUSE_LIST"]),
+    ...mapMutations(mainStore, [
+      "CLEAR_SEARCH",
+      "SET_MAP",
+      "SET_MARKERS",
+      "CLEAR_MARKERS",
+    ]),
     // 지도 객체 등록 22.11.17 이인재
     initMap() {
       const container = document.getElementById("map");
@@ -49,7 +57,7 @@ export default {
         center: new kakao.maps.LatLng(33.450701, 126.570667),
         level: 5,
       };
-      this.map = new kakao.maps.Map(container, options);
+      this.SET_MAP(new kakao.maps.Map(container, options));
     },
     // 카카오맵 div 클릭시 우측 오버레이 모두 끄는 함수
     // 22.11.18 장한결
@@ -94,6 +102,8 @@ export default {
     loadMarkers() {
       // 1. 마커 전부 제거
       this.setMarkers(null);
+      this.CLEAR_MARKER;
+      this.CLEAR_HOUSE_LIST;
       console.log(
         "검색 옵션",
         this.searchOption,
@@ -103,16 +113,19 @@ export default {
       if (this.searchOption) {
         // 검색 조건 아파트명
         if (this.searchOption === "apartmentName") {
+          // 비동기호출
           this.getHouseListByAptname(this.searchKeyword);
+          // 마커생성
           this.createMarkers();
+          // 마커 부착
           this.setMarkers(this.map);
-          this.CLEAR_SEARCH();
+          this.CLEAR_SEARCH;
           // 검색 조건 동이름
         } else if (this.searchOption === "dongName") {
           this.getHouseListByDongname(this.searchKeyword);
           this.createMarkers();
           this.setMarkers(this.map);
-          this.CLEAR_SEARCH();
+          this.CLEAR_SEARCH;
         }
       }
     },
@@ -122,17 +135,21 @@ export default {
       for (var i = 0; i < this.houselist.length; i++) {
         let h = this.houselist[i];
         // 클릭가능한 마커 생성
-        this.markers.push(
+        this.markerLocal.push(
           new kakao.maps.Marker({
             position: new kakao.maps.LatLng(h.lat, h.lng),
             clickable: true,
           })
         );
         // 클릭시 화면 우측 오버레이 생성 이벤트 부착
-        kakao.maps.event.addListener(this.markers[i], "click", () => {
+        // 그 후 지도 중심 이동
+        kakao.maps.event.addListener(this.markerLocal[i], "click", () => {
           this.showDetail(h.aptCode);
+          this.mapCenterMove(h.lat, h.lng, 3);
         });
       }
+      this.SET_MARKERS(this.markerLocal);
+      //console.log(this.markerLocal);
       console.log(
         "markers created with ",
         this.searchOption,
@@ -140,10 +157,17 @@ export default {
         this.markers
       );
     },
+    // 카카오맵 중심 이동 후 확대수준 결정
+    // input : 위도, 경도, 확대 수준 (0~14)
+    // 22.11.18 장한결
+    mapCenterMove(lat, lng, level) {
+      this.map.setCenter(new kakao.maps.LatLng(lat, lng));
+      this.map.setLevel(level, { anchor: new kakao.maps.LatLng(lat, lng) });
+    },
   },
 
   computed: {
-    ...mapState(mainStore, ["searchKeyword", "searchOption"]),
+    ...mapState(mainStore, ["searchKeyword", "searchOption", "map", "markers"]),
     ...mapState(aptDetailStore, ["houselist"]),
   },
 };
@@ -152,7 +176,7 @@ export default {
 <style scoped>
 #map {
   width: 100%;
-  height: 100%;
+  height: 85%;
   position: absolute;
 }
 </style>

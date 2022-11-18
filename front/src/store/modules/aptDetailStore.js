@@ -25,12 +25,12 @@ const aptDetailStore = {
       state.isShow = false;
     },
     CLEAR_HOUSE_LIST(state) {
-      state.houses = [];
+      state.houselist = [];
       state.house = null;
       state.isShow = false;
     },
-    SET_HOUSE_LIST(state, houselist) {
-      state.houselist = houselist;
+    SET_HOUSE_LIST(state, data) {
+      state.houselist = data;
     },
   },
   actions: {
@@ -76,7 +76,6 @@ const aptDetailStore = {
       searchByDongName(
         dongName,
         ({ data }) => {
-          //console.log(data);
           commit("SET_HOUSE_LIST", data);
         },
         (error) => {

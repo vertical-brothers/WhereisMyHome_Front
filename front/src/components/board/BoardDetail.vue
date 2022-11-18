@@ -29,7 +29,7 @@
           <p>조회 : {{ hit }}</p>
         </div>
         <div class="divider mb-3"></div>
-        <div class="text-secondary">{{ content }}</div>
+        <div v-html="content"></div>
         <div class="divider mt-3 mb-3"></div>
         <div class="d-flex justify-content-end">
           <router-link to="/board">

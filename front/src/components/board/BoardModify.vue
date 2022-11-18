@@ -21,7 +21,7 @@
           />
         </div>
         <div class="mb-3">
-          <label for="content" class="form-label">내용 : </label>
+          <!-- <label for="content" class="form-label">내용 : </label>
           <textarea
             v-model="content"
             class="form-control"
@@ -30,7 +30,24 @@
             ref="content"
             rows="7"
           >
-          </textarea>
+          </textarea> -->
+          <editor
+            v-model="content"
+            :api-key="tinymcekey"
+            :init="{
+              height: 500,
+              menubar: false,
+              plugins: [
+                'advlist autolink lists link image charmap print preview anchor',
+                'searchreplace visualblocks code fullscreen',
+                'insertdatetime media table paste code help wordcount',
+              ],
+              toolbar:
+                'undo redo | formatselect | bold italic backcolor | \
+                  alignleft aligncenter alignright alignjustify | \
+                  bullist numlist outdent indent | removeformat | help',
+            }"
+          />
         </div>
         <div class="col-auto text-center">
           <button
@@ -57,6 +74,8 @@
 
 <script>
 import http from "@/api/http.js";
+import { TINY_MCE_KEY } from "@/config";
+import Editor from "@tinymce/tinymce-vue";
 export default {
   name: "BoardModify",
   data() {
@@ -67,6 +86,7 @@ export default {
       content: "",
       registerTime: "",
       hit: 0,
+      tinymcekey: TINY_MCE_KEY,
     };
   },
   created() {
@@ -85,6 +105,7 @@ export default {
         console.log(error);
       });
   },
+  components: { editor: Editor },
   methods: {
     moveBoard() {
       this.$router.push(`/board/detail/${this.articleNo}`);

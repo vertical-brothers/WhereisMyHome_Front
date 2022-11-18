@@ -23,7 +23,7 @@
             ></b-form-input>
           </b-form-group>
 
-          <b-form-group id="content-group" label="내용:" label-for="content">
+          <!-- <b-form-group id="content-group" label="내용:" label-for="content">
             <b-form-textarea
               id="content"
               v-model="article.content"
@@ -31,7 +31,24 @@
               rows="10"
               max-rows="15"
             ></b-form-textarea>
-          </b-form-group>
+          </b-form-group> -->
+          <editor
+            v-model="article.content"
+            :api-key="tinymcekey"
+            :init="{
+              height: 500,
+              menubar: false,
+              plugins: [
+                'advlist autolink lists link image charmap print preview anchor',
+                'searchreplace visualblocks code fullscreen',
+                'insertdatetime media table paste code help wordcount',
+              ],
+              toolbar:
+                'undo redo | formatselect | bold italic backcolor | \
+                  alignleft aligncenter alignright alignjustify | \
+                  bullist numlist outdent indent | removeformat | help',
+            }"
+          />
 
           <b-button type="submit" variant="primary" class="m-1"
             >글작성</b-button
@@ -46,7 +63,9 @@
 
 <script>
 import http from "@/api/http.js";
+import { TINY_MCE_KEY } from "@/config";
 // import { writeArticle } from "@/api/board"
+import Editor from "@tinymce/tinymce-vue";
 export default {
   name: "BoardWrite",
   data() {
@@ -57,10 +76,12 @@ export default {
         subject: "",
         content: "",
       },
+      tinymcekey: TINY_MCE_KEY,
       isUserid: false,
     };
   },
   created() {},
+  components: { editor: Editor },
   methods: {
     moveList() {
       this.$router.push(`/board`);

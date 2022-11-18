@@ -74,50 +74,62 @@
           </div>
           <!-- 아파트 정보 카드 시작 -->
           <div class="card-body">
-            <table class="table mb-4 mt-2">
-              <tr>
-                <td class="col-4 fw-bold fs-6">주소</td>
-                <td class="col-8 fs-6">
-                  {{ house.roadName }} {{ house.roadNameBonbun }}
-                </td>
-              </tr>
-              <tr>
-                <td class="col-4 fw-bold fs-6">건축년도</td>
-                <td class="col-8 fs-6">{{ house.buildYear }}년</td>
-              </tr>
-            </table>
-            <h3 class="fw-bold">리뷰</h3>
-            <table class="table mb-4">
-              <tr class="col-4 fs-6">
-                좋은 집이에요
-              </tr>
-              <tr class="col-4 fs-6">
-                좋은 집이에요
-              </tr>
-              <tr class="col-4 fs-6">
-                좋은 집이에요
-              </tr>
-              <tr class="col-4 fs-6">
-                좋은 집이에요
-              </tr>
-            </table>
-            <h3 class="fw-bold">실거래가</h3>
-            <table class="table mb-2">
-              <thead>
-                <th>거래년</th>
-                <th>가격</th>
-                <th>면적</th>
-                <th>층</th>
-              </thead>
-              <tbody>
+            <div>
+              <table class="table mb-4 mt-2">
                 <tr>
+                  <td class="col-4 fw-bold fs-6">주소</td>
+                  <td class="col-8 fs-6">
+                    {{ house.roadName }} {{ house.roadNameBonbun }}
+                  </td>
+                </tr>
+                <tr>
+                  <td class="col-4 fw-bold fs-6">건축년도</td>
+                  <td class="col-8 fs-6">{{ house.buildYear }}년</td>
+                </tr>
+              </table>
+            </div>
+            <div>
+              <h3 class="fw-bold">리뷰</h3>
+              <table class="table mb-4">
+                <tr class="col-4 fs-6">
+                  좋은 집이에요
+                </tr>
+                <tr class="col-4 fs-6">
+                  좋은 집이에요
+                </tr>
+                <tr class="col-4 fs-6">
+                  좋은 집이에요
+                </tr>
+                <tr class="col-4 fs-6">
+                  좋은 집이에요
+                </tr>
+              </table>
+            </div>
+            <h3 class="fw-bold">실거래가</h3>
+            <div style="height: 300px; overflow: scroll">
+              <table class="table mb-2">
+                <thead>
+                  <th>거래년</th>
+                  <th>가격</th>
+                  <th>면적</th>
+                  <th>층</th>
+                </thead>
+                <tbody>
+                  <!-- <tr>
                   <td class="col-md-2">2019</td>
                   <td class="col-md-6">36000</td>
                   <td class="col-md-2">87.1</td>
                   <td class="col-md-2">3</td>
-                </tr>
-              </tbody>
-            </table>
+                </tr> -->
+                  <tr v-for="deal in deallist" :key="deal.no">
+                    <td class="col-md-2">{{ deal.dealYear }}</td>
+                    <td class="col-md-6">{{ deal.dealAmount }}</td>
+                    <td class="col-md-2">{{ deal.area }}</td>
+                    <td class="col-md-2">{{ deal.floor }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
           <!-- 아파트 정보 카드 끝 -->
         </div>
@@ -142,12 +154,17 @@ export default {
     }; /* global kakao */
   },
   methods: {
-    ...mapMutations(aptDetailStore, ["CLEAR_HOUSE", "CLEAR_HOUSE_LIST"]),
+    ...mapMutations(aptDetailStore, [
+      "CLEAR_HOUSE",
+      "CLEAR_HOUSE_LIST",
+      "CLEAR_DEAL_LIST",
+    ]),
     ...mapMutations(mainStore, ["CLEAR_SEARCH, SET_SEARCH", "SET_MARKERS"]),
     ...mapActions(aptDetailStore, [
       "detailHouse",
       "getHouseListByAptname",
       "getHouseListByDongname",
+      "getDealByAptcode",
     ]),
     likeApt() {},
     close() {
@@ -251,11 +268,14 @@ export default {
     // input : aptCode (PK)
     // 22.11.18 장한결
     showDetail(aptCode) {
+      // 아파트 상세정보 불러오기
       this.detailHouse(aptCode);
+      // 거래내역 불러오기
+      this.getDealByAptcode(aptCode);
     },
   },
   computed: {
-    ...mapState(aptDetailStore, ["house", "isShow", "houselist"]),
+    ...mapState(aptDetailStore, ["house", "isShow", "houselist", "deallist"]),
     ...mapState(mainStore, ["map", "markers"]),
   },
   filters: {},
@@ -265,5 +285,9 @@ export default {
 #_overlay {
   position: absolute;
   z-index: 1;
+}
+#_dealtable {
+  height: 100px;
+  overflow: scroll;
 }
 </style>

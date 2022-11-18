@@ -1,4 +1,5 @@
 import { aptCodeList, houseNameList, searchByDongName } from "@/api/house.js";
+import { searchDealByAptcode } from "@/api/housedeal.js";
 
 /*
 아파트 관련 통신 vuex
@@ -14,6 +15,8 @@ const aptDetailStore = {
     isShow: false,
     // 아파트 리스트
     houselist: [],
+    // 아파트 거래내역
+    deallist: [],
   },
   mutations: {
     SET_DETAIL_HOUSE(state, house) {
@@ -31,6 +34,12 @@ const aptDetailStore = {
     },
     SET_HOUSE_LIST(state, data) {
       state.houselist = data;
+    },
+    SET_DEAL_LIST(state, data) {
+      state.deallist = data;
+    },
+    CLEAR_DEAL_LIST(state) {
+      state.deallist = [];
     },
   },
   actions: {
@@ -77,6 +86,23 @@ const aptDetailStore = {
         dongName,
         ({ data }) => {
           commit("SET_HOUSE_LIST", data);
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    },
+    /* 아파트 코드로 아파트 거래정보 가져오기 (비동기 호출)
+    input : aptCode 
+    output : deallist[]
+    22.11.17 장한결
+    */
+    getDealByAptcode: ({ commit }, aptCode) => {
+      searchDealByAptcode(
+        aptCode,
+        ({ data }) => {
+          commit("SET_DEAL_LIST", data);
+          console.log(data);
         },
         (error) => {
           console.log(error);

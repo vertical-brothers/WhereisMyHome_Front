@@ -3,10 +3,10 @@ import Vuex from "vuex";
 
 import mainStore from "@/store/modules/mainStore";
 import aptDetailStore from "@/store/modules/aptDetailStore";
-import userStore from "@/store/modules/userStore";
+import memberStore from "@/store/modules/memberStore";
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
-  modules: { mainStore, aptDetailStore, userStore },
+  modules: { mainStore, aptDetailStore, memberStore },
 });

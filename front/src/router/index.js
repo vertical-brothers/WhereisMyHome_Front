@@ -12,7 +12,9 @@ import BoardModify from "@/components/board/BoardModify.vue";
 import BoardWrite from "@/components/board/BoardWrite.vue";
 import KakaoMap from "@/components/apt/map/KakaoMap.vue";
 import AptDetail from "@/components/apt/info/AptOverlay.vue";
+
 import UserLogin from "@/components/user/UserLogin";
+import UserRegister from "@/components/user/UserRegister";
 
 Vue.use(VueRouter);
 
@@ -94,6 +96,11 @@ const routes = [
         path: "login",
         name: "login",
         component: UserLogin,
+      },
+      {
+        path: "join",
+        name: "join",
+        component: UserRegister,
       },
     ],
   },

@@ -2,12 +2,7 @@ import jwtDecode from "jwt-decode";
 import router from "@/router";
 import { login, findById, tokenRegeneration, logout } from "@/api/member";
 
-/*
- 사용자 관련 vuex
- 2022.11.18 이인재
-*/
-
-const userStore = {
+const memberStore = {
   namespaced: true,
   state: {
     isLogin: false,
@@ -47,11 +42,15 @@ const userStore = {
             let accessToken = data["access-token"];
             let refreshToken = data["refresh-token"];
             // console.log("login success token created!!!! >> ", accessToken, refreshToken);
+            console.log("1");
             commit("SET_IS_LOGIN", true);
+            console.log("2");
             commit("SET_IS_LOGIN_ERROR", false);
+            console.log("3");
             commit("SET_IS_VALID_TOKEN", true);
             sessionStorage.setItem("access-token", accessToken);
             sessionStorage.setItem("refresh-token", refreshToken);
+            console.log("4");
           } else {
             commit("SET_IS_LOGIN", false);
             commit("SET_IS_LOGIN_ERROR", true);
@@ -150,4 +149,4 @@ const userStore = {
   },
 };
 
-export default userStore;
+export default memberStore;

@@ -81,7 +81,6 @@ export default {
         (err = false),
         this.$refs.content.focus());
 
-      alert("middle test");
       if (!err) {
         alert(msg);
       } else {
@@ -101,7 +100,6 @@ export default {
         subject: this.article.subject,
         content: this.article.content,
       };
-      console.log(myData);
       http
         .post("/board/", myData)
         .then(({ data }) => {

@@ -45,6 +45,7 @@
             type="button"
             id="btn-list"
             class="btn btn-outline-danger mb-3"
+            @click="moveList()"
           >
             목록으로이동...
           </button>
@@ -71,7 +72,7 @@ export default {
   created() {
     let no = this.$route.params.no;
     http
-      .get(`/detail/${no}`)
+      .get(`/board/${no}`)
       .then(({ data }) => {
         this.articleNo = data.articleNo;
         this.userId = data.userId;
@@ -85,8 +86,8 @@ export default {
       });
   },
   methods: {
-    moveBoard(no) {
-      this.$router.push(`/board/detail/${no}`);
+    moveBoard() {
+      this.$router.push(`/board/detail/${this.articleNo}`);
     },
     moveList() {
       this.$router.push(`/board`);
@@ -99,10 +100,10 @@ export default {
         content: this.content,
       };
       http
-        .put(`/modify/`, myData)
+        .put(`/board/`, myData)
         .then(({ data }) => {
           if (data != null) alert("성공적으로 글을 수정하였습니다.");
-          this.moveBoard(this.articleNo);
+          this.moveBoard();
         })
         .catch(() => {
           alert("글수정에 실패하였습니다.");

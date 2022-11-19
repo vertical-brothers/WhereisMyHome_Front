@@ -76,15 +76,14 @@ export default {
   methods: {
     ...mapActions(memberStore, ["userConfirm", "getUserInfo"]),
     async confirm() {
-      console.log(this.memberDto.userId + " " + this.memberDto.userPwd);
-
       await this.userConfirm(this.memberDto);
       let token = sessionStorage.getItem("access-token");
       // console.log("1. confirm() token >> " + token);
+      console.log("userid is");
       if (this.isLogin) {
         console.log("login ok");
         await this.getUserInfo(token);
-        // console.log("4. confirm() userInfo :: ", this.userInfo);
+        console.log("4. confirm() userInfo :: ", this.userInfo);
         this.$router.push({ name: "main" });
       }
     },

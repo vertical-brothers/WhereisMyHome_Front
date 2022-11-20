@@ -19,6 +19,7 @@ import UserRegister from "@/components/user/UserRegister";
 import UserMypage from "@/components/user/UserMypage";
 
 import StarList from "@/components/star/StarList";
+
 Vue.use(VueRouter);
 
 const routes = [
@@ -119,7 +120,7 @@ const routes = [
     children: [
       {
         path: "list",
-        name: "list",
+        name: "starList",
         component: StarList,
       },
     ],

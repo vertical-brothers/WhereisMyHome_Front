@@ -22,4 +22,15 @@ function houseInstance() {
   return instance;
 }
 
-export { apiInstance, houseInstance };
+function tokenInstance(token) {
+  const instance = axios.create({
+    baseURL: API_BASE_URL,
+    headers: {
+      "Content-type": `application/json`,
+      "access-token": token,
+    },
+  });
+  return instance;
+}
+
+export { apiInstance, houseInstance, tokenInstance };

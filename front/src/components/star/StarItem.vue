@@ -1,6 +1,6 @@
 <template>
   <b-card
-    title="star.sidoName"
+    title="Card Title"
     img-src="https://picsum.photos/600/300/?image=25"
     img-alt="Image"
     img-top
@@ -23,11 +23,7 @@ export default {
     star: {},
     index: Number,
   },
-  methods: {
-    showArticle() {
-      // this.$route.push({ name: "detail", params: { no } });
-    },
-  },
+  methods: {},
 };
 </script>
 <style scoped></style>

@@ -1,6 +1,6 @@
-import axios from "axios";
-
 import { apiInstance } from "@/api/index.js";
+
+import axios from "axios";
 
 const api = apiInstance();
 
@@ -52,4 +52,21 @@ async function logout(userid, success, fail) {
   await api.get(`/user/logout/${userid}`).then(success).catch(fail);
 }
 
-export { login, findById, tokenRegeneration, logout };
+async function join(user, success, fail) {
+  await axios
+    .post(`http://localhost:8080/whereismyhome/user/`, JSON.stringify(user), {
+      // json을 json타입의 text로 변환
+      headers: {
+        "Content-Type": `application/json`, // application/json 타입 선언
+      },
+    })
+    .then(success)
+    .catch(fail);
+}
+// 아이디 중복 체크
+// 22.11.20 장한결
+async function idcheck(userId, success, fail) {
+  await api.get(`/user/idcheck/${userId}`).then(success).catch(fail);
+}
+
+export { login, findById, tokenRegeneration, logout, join, idcheck };

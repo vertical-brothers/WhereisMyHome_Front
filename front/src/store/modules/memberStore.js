@@ -1,6 +1,13 @@
 import jwtDecode from "jwt-decode";
 import router from "@/router";
-import { login, findById, tokenRegeneration, logout } from "@/api/member";
+import {
+  login,
+  findById,
+  tokenRegeneration,
+  logout,
+  join,
+  idcheck,
+} from "@/api/member";
 
 const memberStore = {
   namespaced: true,
@@ -9,6 +16,8 @@ const memberStore = {
     isLoginError: false,
     userInfo: "",
     isValidToken: false,
+    isRegisterError: false,
+    isDuplicatedId: false,
   },
   getters: {
     checkUserInfo: function (state) {
@@ -31,6 +40,18 @@ const memberStore = {
     SET_USER_INFO: (state, userInfo) => {
       state.isLogin = true;
       state.userInfo = userInfo;
+    },
+    SET_IS_REGISTER_ERROR: (state) => {
+      state.isRegisterError = true;
+    },
+    CLEAR_IS_REGISTER_ERROR: (state) => {
+      state.isRegisterError = false;
+    },
+    SET_IS_DUPLICATED_ID: (state) => {
+      state.isDuplicatedId = true;
+    },
+    CLEAR_IS_DUPLICATED_ID: (state) => {
+      state.isDuplicatedId = false;
     },
   },
   actions: {
@@ -59,6 +80,22 @@ const memberStore = {
         },
         (error) => {
           console.log(error);
+        }
+      );
+    },
+    async userjoin({ commit }, user) {
+      await join(
+        user,
+        ({ data }) => {
+          if (data) {
+            commit("CLEAR_IS_REGISTER_ERROR");
+          } else {
+            commit("SET_IS_REGISTER_ERROR");
+          }
+        },
+        (error) => {
+          console.log(error);
+          commit("SET_IS_REGISTER_ERROR");
         }
       );
     },
@@ -144,6 +181,22 @@ const memberStore = {
         },
         (error) => {
           console.log(error);
+        }
+      );
+    },
+    async useridcheck({ commit }, userid) {
+      await idcheck(
+        userid,
+        ({ data }) => {
+          if (data) {
+            commit("CLEAR_IS_DUPLICATED_ID");
+          } else {
+            commit("SET_IS_DUPLICATED_ID");
+          }
+        },
+        (error) => {
+          console.log(error);
+          commit("SET_IS_DUPLICATED_ID");
         }
       );
     },

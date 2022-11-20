@@ -4,6 +4,7 @@ import HomeView from "../views/HomeView.vue";
 import BoardView from "@/views/BoardView.vue";
 import UserView from "@/views/UserView.vue";
 import AptView from "@/views/AptView.vue";
+import StarView from "@/views/StarView.vue";
 
 import MainHome from "@/components/home/MainHome.vue";
 import BoardList from "@/components/board/BoardList.vue";
@@ -15,7 +16,9 @@ import AptDetail from "@/components/apt/info/AptOverlay.vue";
 
 import UserLogin from "@/components/user/UserLogin";
 import UserRegister from "@/components/user/UserRegister";
+import UserMypage from "@/components/user/UserMypage";
 
+import StarList from "@/components/star/StarList";
 Vue.use(VueRouter);
 
 const routes = [
@@ -101,6 +104,23 @@ const routes = [
         path: "join",
         name: "join",
         component: UserRegister,
+      },
+      {
+        path: "mypage",
+        name: "mypage",
+        component: UserMypage,
+      },
+    ],
+  },
+  {
+    path: "/star",
+    name: "star",
+    component: StarView,
+    children: [
+      {
+        path: "list",
+        name: "list",
+        component: StarList,
       },
     ],
   },

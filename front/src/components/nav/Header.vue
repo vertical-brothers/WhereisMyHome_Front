@@ -16,18 +16,54 @@
               Home</router-link
             ></b-nav-item
           >
-          <b-nav-item href="#" class="nav-item"
-            ><router-link :to="{ name: 'board' }" class="nav-link"
-              ><b-icon icon="clipboard-check" font-scale="2"></b-icon>
-              공지사항</router-link
-            ></b-nav-item
-          >
-          <b-nav-item href="#" class="nav-item"
-            ><router-link :to="{ name: 'apt' }" class="nav-link"
-              ><b-icon icon="building" font-scale="2"></b-icon>
-              아파트매매정보</router-link
-            ></b-nav-item
-          >
+
+          <div v-b-hover="boardHandleHover">
+            <b-nav-item href="#" class="nav-item"
+              ><router-link :to="{ name: 'board' }" class="nav-link"
+                ><b-icon
+                  v-if="isBoardHovered"
+                  animation="throb"
+                  icon="clipboard-check"
+                  scale="1.5"
+                  font-scale="2"
+                ></b-icon>
+                <b-icon v-else icon="clipboard-check" font-scale="2"></b-icon>
+                공지사항</router-link
+              ></b-nav-item
+            >
+          </div>
+
+          <div v-b-hover="tradeHandleHover">
+            <b-nav-item href="#" class="nav-item"
+              ><router-link :to="{ name: 'apt' }" class="nav-link"
+                ><b-icon
+                  v-if="isTradeHovered"
+                  animation="throb"
+                  icon="building"
+                  scale="1.5"
+                  font-scale="2"
+                ></b-icon>
+                <b-icon v-else icon="building" font-scale="2"></b-icon>
+                아파트매매정보</router-link
+              ></b-nav-item
+            >
+          </div>
+
+          <div v-b-hover="starHandleHover">
+            <b-nav-item href="#" class="nav-item" v-if="userInfo"
+              ><router-link :to="{ name: 'star' }" class="nav-link"
+                ><b-icon
+                  v-if="isStarHovered"
+                  animation="throb"
+                  icon="bookmark-heart"
+                  scale="1.5"
+                  font-scale="2"
+                ></b-icon
+                ><b-icon v-else icon="bookmark-heart" font-scale="2"></b-icon>
+                관심 지역</router-link
+              ></b-nav-item
+            >
+          </div>
         </b-navbar-nav>
         <!-- after login -->
         <b-navbar-nav class="ml-auto" v-if="userInfo">
@@ -77,7 +113,11 @@ const memberStore = "memberStore";
 export default {
   name: "HeaderBar",
   data() {
-    return {};
+    return {
+      isBoardHovered: false,
+      isTradeHovered: false,
+      isStarHovered: false,
+    };
   },
   computed: {
     ...mapState(memberStore, ["isLogin", "userInfo"]),
@@ -85,6 +125,15 @@ export default {
   },
   created() {},
   methods: {
+    boardHandleHover(hovered) {
+      this.isBoardHovered = hovered;
+    },
+    tradeHandleHover(hovered) {
+      this.isTradeHovered = hovered;
+    },
+    starHandleHover(hovered) {
+      this.isStarHovered = hovered;
+    },
     ...mapActions(memberStore, ["userLogout"]),
     // ...mapMutations(memberStore, ["SET_IS_LOGIN", "SET_USER_INFO"]),
     onClickLogout() {

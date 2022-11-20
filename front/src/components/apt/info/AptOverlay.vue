@@ -1,23 +1,10 @@
 <template>
-  <div id="_overlay" class="col-12 d-flex justify-content-end" @click="close">
+  <div id="_overlay" class="col-12 d-flex justify-content-end">
+    <review-modal></review-modal>
+    <div class="col-md-9" @click="close"></div>
     <div id="_overlayrightend" class="col-md-3 d-flex flex-column me-5 mt-3">
       <!-- 우측 오버레이 검색바 시작 -->
       <div id="_searchdiv" class="row mb-3 col-md-12">
-        <!-- <b-form-select
-          class="form-select form-select-sm ms-10 me-1 w-5"
-          v-model="selected"
-          :options="options"
-        ></b-form-select>
-        <b-form-input
-          @keyup.enter="search"
-          type="text"
-          v-model="keyword"
-          class="form-control form-control-lg"
-          placeholder="원하시는 건물명 또는 동을 입력해주세요"
-        />
-        <button @click="search" class="btn btn-primary" type="button">
-          <b-icon icon="search" variant="info"></b-icon>
-        </button> -->
         <form class="d-flex col-md-12">
           <select
             class="form-select me-2"
@@ -79,7 +66,8 @@
                 <tr>
                   <td class="col-4 fw-bold fs-6">주소</td>
                   <td class="col-8 fs-6">
-                    {{ house.roadName }} {{ house.roadNameBonbun }}
+                    {{ house.roadName }}
+                    {{ house.roadNameBonbun | roadNumberFilter }}
                   </td>
                 </tr>
                 <tr>
@@ -88,39 +76,45 @@
                 </tr>
               </table>
             </div>
-            <div>
-              <h3 class="fw-bold">리뷰</h3>
+            <!-- 아파트 리뷰 카드 시작 -->
+            <div><h4 class="fw-bold">리뷰</h4></div>
+            <table class="table mb-2">
+              <thead>
+                <th class="col-md-2">작성일</th>
+                <th class="col-md-6">제목</th>
+                <th class="col-md-2">별점</th>
+              </thead>
+            </table>
+            <div style="height: 230px; overflow: scroll">
               <table class="table mb-4">
-                <tr class="col-4 fs-6">
-                  좋은 집이에요
-                </tr>
-                <tr class="col-4 fs-6">
-                  좋은 집이에요
-                </tr>
-                <tr class="col-4 fs-6">
-                  좋은 집이에요
-                </tr>
-                <tr class="col-4 fs-6">
-                  좋은 집이에요
+                <!-- <tr>
+                  <td>좋은 집이에요</td>
+                  <td>ssafy</td>
+                  <td>별점</td>
+                </tr> -->
+                <tr v-for="review in reviews" :key="review.id">
+                  <td class="col-md-2">{{ review.date | dateFilter }}</td>
+                  <td class="col-md-6" @click="reviewDetail(review)">
+                    {{ review.subject }}
+                  </td>
+                  <td class="col-md-2">{{ review.star1 }}</td>
                 </tr>
               </table>
             </div>
-            <h3 class="fw-bold">실거래가</h3>
-            <div style="height: 300px; overflow: scroll">
+            <!-- 아파트 리뷰 카드 끝 -->
+            <!-- 실거래가 카드 시작 -->
+            <h4 class="fw-bold">실거래가</h4>
+            <table class="table mb-2">
+              <thead>
+                <th class="col-md-2">거래년</th>
+                <th class="col-md-5">가격</th>
+                <th class="col-md-3">면적</th>
+                <th class="col-md-2">층</th>
+              </thead>
+            </table>
+            <div style="height: 230px; overflow: scroll">
               <table class="table mb-2">
-                <thead>
-                  <th>거래년</th>
-                  <th>가격</th>
-                  <th>면적</th>
-                  <th>층</th>
-                </thead>
                 <tbody>
-                  <!-- <tr>
-                  <td class="col-md-2">2019</td>
-                  <td class="col-md-6">36000</td>
-                  <td class="col-md-2">87.1</td>
-                  <td class="col-md-2">3</td>
-                </tr> -->
                   <tr v-for="deal in deallist" :key="deal.no">
                     <td class="col-md-2">{{ deal.dealYear }}</td>
                     <td class="col-md-6">{{ deal.dealAmount }}</td>
@@ -131,6 +125,7 @@
               </table>
             </div>
           </div>
+          <!-- 실거래가 카드 끝 -->
           <!-- 아파트 정보 카드 끝 -->
         </div>
         <!-- 우측 오버레이 아파트정보칸 끝 -->
@@ -140,9 +135,10 @@
 </template>
 <script>
 import { mapState, mapMutations, mapActions } from "vuex";
-
+import ReviewModal from "@/components/apt/info/ReviewModal.vue";
 const aptDetailStore = "aptDetailStore";
 const mainStore = "mainStore";
+const aptReviewStore = "aptReviewStore";
 
 export default {
   name: "AptOverlay",
@@ -152,6 +148,9 @@ export default {
       searchOption: "",
       searchKeyword: "",
     }; /* global kakao */
+  },
+  components: {
+    ReviewModal,
   },
   methods: {
     ...mapMutations(aptDetailStore, [
@@ -166,6 +165,14 @@ export default {
       "getHouseListByDongname",
       "getDealByAptcode",
     ]),
+    ...mapMutations(aptReviewStore, [
+      "CLEAR_REVIEWS",
+      "SET_REVIEW",
+      "CLEAR_REVIEW",
+      "SET_REVIEW_MODAL_SHOW",
+      "CLEAR_REVIEW_MODAL_SHOW",
+    ]),
+    ...mapActions(aptReviewStore, ["getReviews"]),
     likeApt() {},
     close() {
       this.CLEAR_HOUSE();
@@ -272,13 +279,30 @@ export default {
       this.detailHouse(aptCode);
       // 거래내역 불러오기
       this.getDealByAptcode(aptCode);
+      // 리뷰 불러오기
+      this.getReviews(aptCode);
+    },
+    reviewDetail(review) {
+      this.SET_REVIEW(review);
+      this.SET_REVIEW_MODAL_SHOW();
     },
   },
   computed: {
     ...mapState(aptDetailStore, ["house", "isShow", "houselist", "deallist"]),
     ...mapState(mainStore, ["map", "markers"]),
+    ...mapState(aptReviewStore, ["reviews"]),
   },
-  filters: {},
+  filters: {
+    roadNumberFilter(value) {
+      return parseInt(value);
+    },
+    dateFilter(value) {
+      let year = value.substring(2, 4);
+      let month = value.substring(5, 7);
+      let day = value.substring(8, 10);
+      return `${year}.${month}.${day}`;
+    },
+  },
 };
 </script>
 <style>

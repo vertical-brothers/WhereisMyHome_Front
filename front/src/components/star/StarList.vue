@@ -1,13 +1,10 @@
 <template>
   <div>
     <div class="col-sm-12 d-flex justify-content-center mt-4">
-      <div
-        class="row row-cols-3 col-md-10 h-50 w-100 border"
-        style="height: 500%"
-      >
+      <div class="row row-cols-3 col-md-10 h-50 w-100" style="height: 400%">
         <!-- <div class="row row-cols-3 h-8 border" style="width: 100%"> -->
         <div
-          class="rounded border w-20"
+          class="rounded border w-20 h-10"
           id="starlist"
           style="height: 800px; overflow: scroll"
         >
@@ -24,7 +21,7 @@
         </div>
 
         <div class="col-lg-8 rounded border">
-          <kakao-map />
+          <star-kakao-map />
         </div>
       </div>
     </div>
@@ -33,19 +30,21 @@
 <script>
 import StarItem from "@/components/star/StarItem.vue";
 import { listStar } from "@/api/star.js";
-import { mapState } from "vuex";
-import KakaoMap from "../star/map/KakaoMap.vue";
+import StarKakaoMap from "@/components/star/map/StarKakaoMap.vue";
+import StarStore from "@/store/modules/StarStore.js";
+
+import { mapActions, mapState } from "vuex";
 
 const memberStore = "memberStore";
 
 export default {
   name: "StarList",
-  components: { StarItem, KakaoMap },
+  components: { StarItem, StarKakaoMap },
 
   data() {
     return {
       stars: [],
-      //   acesstoken: sessionStorage.getItem("access-token"),
+      // acesstoken: sessionStorage.getItem("access-token"),
     };
   },
   created() {
@@ -64,6 +63,15 @@ export default {
   },
   computed: {
     ...mapState(memberStore, ["userInfo"]),
+  },
+
+  methods: {
+    ...mapActions(StarStore, [
+      "detailHouse",
+      "getHouseListByAptname",
+      "getHouseListByDongname",
+      "getDealByAptcode",
+    ]),
   },
 };
 </script>

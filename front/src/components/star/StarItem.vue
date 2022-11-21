@@ -1,25 +1,28 @@
 <template>
   <b-card
     :title="star.dong"
-    img-src="https://littledeep.com/wp-content/uploads/2020/09/apartments-illustration-1024x600.png"
-    img-height="170"
+    img-src="https://cdn.pixabay.com/photo/2016/11/13/12/52/kuala-lumpur-1820944_960_720.jpg"
+    img-height="150"
     img-alt="Image"
     img-top
+    width="200"
     tag="article"
     class="mb-2"
     style="text-align: left"
   >
-    <b-card-text
-      >{{ star.roadName }} {{ star.dong }} {{ star.apartmentName }}</b-card-text
-    >
-
-    <b-button
-      href="#"
-      variant="danger"
-      @click="test(star.starNo)"
-      style="align: right"
-      >삭제</b-button
-    >
+    <div class="row">
+      <div class="col-10">
+        <b-card-text
+          >{{ star.roadName }} {{ star.dong }}
+          {{ star.apartmentName }}</b-card-text
+        >
+      </div>
+      <div class="col-2">
+        <b-button variant="outline-danger" @click="test(star.starNo)"
+          >삭제</b-button
+        >
+      </div>
+    </div>
   </b-card>
 </template>
 <script>

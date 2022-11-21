@@ -26,7 +26,7 @@ function tokenInstance(token) {
   const instance = axios.create({
     baseURL: API_BASE_URL,
     headers: {
-      "Content-type": `application/json`,
+      "Content-type": "application/json",
       "access-token": token,
     },
   });

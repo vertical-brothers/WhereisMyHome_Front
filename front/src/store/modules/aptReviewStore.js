@@ -18,7 +18,6 @@ const aptReviewStore = {
     reviewModalShow: false,
     writeModalShow: false,
     isWriteError: false,
-    reviewForceUpdate: 0,
   },
   mutations: {
     SET_REVIEWS(state, reviews) {
@@ -51,12 +50,6 @@ const aptReviewStore = {
     CLEAR_IS_WRITE_ERROR(state) {
       state.isWriteError = false;
     },
-    SET_REVIEW_FORCE_UPDATE(state) {
-      console.log("force");
-
-      state.reviewForceUpdate += 1;
-      console.log(state.reviewForceUpdate);
-    },
   },
   actions: {
     /* 아파트 코드로 아파트 리뷰 정보 가져오기 (비동기 호출)
@@ -68,6 +61,7 @@ output : review List
       searchApartmentReviewByAptcode(
         aptCode,
         ({ data }) => {
+          console.log(data);
           commit("SET_REVIEWS", data);
         },
         (error) => {

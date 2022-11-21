@@ -81,8 +81,8 @@ const aptDetailStore = {
     output : houses[]
     22.11.17 장한결
     */
-    getHouseListByDongname: ({ commit }, dongName) => {
-      searchByDongName(
+    async getHouseListByDongname({ commit }, dongName) {
+      await searchByDongName(
         dongName,
         ({ data }) => {
           commit("SET_HOUSE_LIST", data);

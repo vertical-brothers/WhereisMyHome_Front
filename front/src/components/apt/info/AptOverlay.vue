@@ -216,7 +216,7 @@ export default {
     // 검색조건 받아서 마커생성 함수 호출
     // 검색조건 있을때만 동작
     // 22.11.17 장한결
-    loadMarkers() {
+    async loadMarkers() {
       // 1. 마커 전부 제거
       this.setMarkers(null);
       this.CLEAR_MARKER;
@@ -239,9 +239,10 @@ export default {
           this.CLEAR_SEARCH;
           // 검색 조건 동이름
         } else if (this.searchOption === "dongName") {
-          this.getHouseListByDongname(this.searchKeyword);
+          await this.getHouseListByDongname(this.searchKeyword);
           this.createMarkers();
           this.setMarkers(this.map);
+
           this.CLEAR_SEARCH;
         }
       }
@@ -256,6 +257,7 @@ export default {
         // 클릭가능한 마커 생성
         this.markerLocal.push(
           new kakao.maps.Marker({
+            map: this.map,
             position: new kakao.maps.LatLng(h.lat, h.lng),
             clickable: true,
           })
@@ -267,13 +269,14 @@ export default {
           this.mapCenterMove(h.lat, h.lng, 3);
         });
       }
+
+      this.SET_MARKERS(this.markerLocal);
       console.log(
         "markers created with ",
         this.searchOption,
         this.searchKeyword,
         this.markers
       );
-      this.SET_MARKERS(this.markerLocal);
     },
     // 카카오맵 중심 이동 후 확대수준 결정
     // input : 위도, 경도, 확대 수준 (0~14)
@@ -286,7 +289,7 @@ export default {
     // input : map object (null입력시 마커 삭제됨.)
     // 22.11.18 장한결
     setMarkers(map) {
-      for (var i = 0; i < this.markers.length; i++) {
+      for (let i = 0; i < this.markers.length; i++) {
         this.markers[i].setMap(map);
       }
     },

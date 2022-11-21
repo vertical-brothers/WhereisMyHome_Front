@@ -88,9 +88,9 @@ export default {
     },
   },
   methods: {
-    ...mapActions(aptReviewStore, ["writeReview"]),
+    ...mapActions(aptReviewStore, ["writeReview", "getReviews"]),
     ...mapMutations(aptReviewStore, ["CLEAR_WRITE_MODAL_SHOW"]),
-    writeArticle(e) {
+    async writeArticle(e) {
       e.preventDefault();
       if (this.review.subject == null || this.review.subject == "") {
         alert("제목을 입력해주세요.");
@@ -101,7 +101,9 @@ export default {
       }
       this.review.aptCode = this.house.aptCode;
       console.log(this.review);
-      this.writeReview(this.review);
+      await this.writeReview(this.review).then(() => {
+        this.getReviews(this.review.aptCode);
+      });
       this.$nextTick(() => {
         this.$bvModal.hide("_modal");
       });

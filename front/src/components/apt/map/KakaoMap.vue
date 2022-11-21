@@ -25,13 +25,6 @@ export default {
     //console.log(this.searchKeyword);
     this.loadMap();
     this.loadMarkers();
-    if (this.houselist.length > 0) {
-      this.mapCenterMove(
-        this.houselist[0].lat,
-        this.houselist[0].lng,
-        this.zoomLevel
-      );
-    }
   },
 
   created() {
@@ -127,9 +120,18 @@ export default {
           this.CLEAR_SEARCH;
           // 검색 조건 동이름
         } else if (this.searchOption === "dongName") {
-          this.getHouseListByDongname(this.searchKeyword);
-          this.createMarkers();
-          this.setMarkers(this.map);
+          this.getHouseListByDongname(this.searchKeyword).then(() => {
+            this.createMarkers();
+            this.setMarkers(this.map);
+            if (this.houselist.length > 0) {
+              this.mapCenterMove(
+                this.houselist[0].lat,
+                this.houselist[0].lng,
+                this.zoomLevel
+              );
+            }
+          });
+
           this.CLEAR_SEARCH;
         }
       }
@@ -166,6 +168,7 @@ export default {
     // input : 위도, 경도, 확대 수준 (0~14)
     // 22.11.18 장한결
     mapCenterMove(lat, lng, level) {
+      console.log("좌표이동", lat, lng);
       this.map.setCenter(new kakao.maps.LatLng(lat, lng));
       this.map.setLevel(level, { anchor: new kakao.maps.LatLng(lat, lng) });
     },

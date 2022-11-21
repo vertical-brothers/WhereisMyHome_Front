@@ -312,7 +312,7 @@ export default {
   computed: {
     ...mapState(aptDetailStore, ["house", "isShow", "houselist", "deallist"]),
     ...mapState(mainStore, ["map", "markers"]),
-    ...mapState(aptReviewStore, ["reviews"]),
+    ...mapState(aptReviewStore, ["reviews", "reviewForceUpdate"]),
   },
   filters: {
     roadNumberFilter(value) {

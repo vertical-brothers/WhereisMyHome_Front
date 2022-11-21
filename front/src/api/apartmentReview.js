@@ -25,4 +25,20 @@ async function writeReviewApi(review, success, fail) {
     .catch(fail);
 }
 
-export { searchApartmentReviewByAptcode, writeReviewApi };
+async function updateReviewApi(review, success, fail) {
+  await axios
+    .put(
+      `http://localhost:8080/whereismyhome/aptreview`,
+      JSON.stringify(review),
+      {
+        // json을 json타입의 text로 변환
+        headers: {
+          "Content-Type": `application/json`, // application/json 타입 선언
+        },
+      }
+    )
+    .then(success)
+    .catch(fail);
+}
+
+export { searchApartmentReviewByAptcode, writeReviewApi, updateReviewApi };

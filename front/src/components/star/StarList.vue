@@ -1,9 +1,17 @@
 <template>
   <div>
-    <div class="col-md-12 d-flex justify-content-center mt-4">
-      <div class="row row-cols-3 col-md-10 h-100 border">
-        <div class="rounded border col-lg-4 overflow-auto">
-          <h4 class>관심지역 목록</h4>
+    <div class="col-sm-12 d-flex justify-content-center mt-4">
+      <div
+        class="row row-cols-3 col-md-10 h-50 w-100 border"
+        style="height: 500%"
+      >
+        <!-- <div class="row row-cols-3 h-8 border" style="width: 100%"> -->
+        <div
+          class="rounded border w-20"
+          id="starlist"
+          style="height: 800px; overflow: scroll"
+        >
+          <!-- <h4 class>관심지역 목록</h4> -->
           <table class="table rounded">
             <star-item
               v-for="(star, index) in stars"
@@ -16,12 +24,7 @@
         </div>
 
         <div class="col-lg-8 rounded border">
-          <h4>게시판 2</h4>
-          <table class="table rounded">
-            <tr>
-              title
-            </tr>
-          </table>
+          <kakao-map />
         </div>
       </div>
     </div>
@@ -31,15 +34,14 @@
 import StarItem from "@/components/star/StarItem.vue";
 import { listStar } from "@/api/star.js";
 import { mapState } from "vuex";
+import KakaoMap from "../star/map/KakaoMap.vue";
 
 const memberStore = "memberStore";
 
 export default {
   name: "StarList",
-  components: { StarItem },
-  comments: {
-    StarItem,
-  },
+  components: { StarItem, KakaoMap },
+
   data() {
     return {
       stars: [],
@@ -65,3 +67,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+#starList {
+  overflow: scroll;
+}
+</style>

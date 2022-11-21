@@ -6,8 +6,8 @@
 <script>
 import { KAKAO_MAP_KEY } from "@/config";
 import { mapActions, mapMutations, mapState } from "vuex";
-const aptDetailStore = "aptDetailStore";
-const mainStore = "mainStore";
+const StarStore = "StarStore";
+const StarSubStore = "StarSubStore";
 // import { dongCodeList, houseNameList, aptCodeList } from "@/api/house";
 export default {
   name: "KakaoMap",
@@ -38,13 +38,13 @@ export default {
     this.aptList = this.$route.params.data;
   },
   methods: {
-    ...mapActions(aptDetailStore, [
+    ...mapActions(StarStore, [
       "detailHouse",
       "getHouseListByAptname",
       "getHouseListByDongname",
     ]),
-    ...mapMutations(aptDetailStore, ["CLEAR_HOUSE", "CLEAR_HOUSE_LIST"]),
-    ...mapMutations(mainStore, [
+    ...mapMutations(StarStore, ["CLEAR_HOUSE", "CLEAR_HOUSE_LIST"]),
+    ...mapMutations(StarSubStore, [
       "CLEAR_SEARCH",
       "SET_MAP",
       "SET_MARKERS",
@@ -167,8 +167,13 @@ export default {
   },
 
   computed: {
-    ...mapState(mainStore, ["searchKeyword", "searchOption", "map", "markers"]),
-    ...mapState(aptDetailStore, ["houselist"]),
+    ...mapState(StarSubStore, [
+      "searchKeyword",
+      "searchOption",
+      "map",
+      "markers",
+    ]),
+    ...mapState(StarStore, ["houselist"]),
   },
 };
 </script>

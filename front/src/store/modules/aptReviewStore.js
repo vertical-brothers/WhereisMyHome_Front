@@ -1,5 +1,7 @@
-import { searchApartmentReviewByAptcode } from "@/api/apartmentReview.js";
-
+import {
+  searchApartmentReviewByAptcode,
+  writeReviewApi,
+} from "@/api/apartmentReview.js";
 /*
 아파트 리뷰 관련 통신 vuex
 2022.11.20 장한결
@@ -13,6 +15,8 @@ const aptReviewStore = {
     // 리뷰정보 디테일 위한 객체
     review: null,
     reviewModalShow: false,
+    writeModalShow: false,
+    isWriteError: false,
   },
   mutations: {
     SET_REVIEWS(state, reviews) {
@@ -29,11 +33,21 @@ const aptReviewStore = {
     },
     SET_REVIEW_MODAL_SHOW(state) {
       state.reviewModalShow = true;
-      console.log(state.reviewModalShow);
     },
-    CLEAR_REVIEW_MODAL_SHOW(state, value) {
-      state.reviewModalShow = value;
+    CLEAR_REVIEW_MODAL_SHOW(state) {
       state.reviewModalShow = false;
+    },
+    SET_WRITE_MODAL_SHOW(state) {
+      state.writeModalShow = true;
+    },
+    CLEAR_WRITE_MODAL_SHOW(state) {
+      state.writeModalShow = false;
+    },
+    SET_IS_WRITE_ERROR(state) {
+      state.isWriteError = true;
+    },
+    CLEAR_IS_WRITE_ERROR(state) {
+      state.isWriteError = false;
     },
   },
   actions: {
@@ -56,6 +70,22 @@ output : review List
     },
     clearModal: ({ commit }) => {
       commit("CLEAR_REVIEW_MODAL_SHOW");
+    },
+    async writeReview({ commit }, reviewdata) {
+      await writeReviewApi(
+        reviewdata,
+        ({ data }) => {
+          if (data) {
+            commit("CLEAR_IS_WRITE_ERROR");
+          } else {
+            commit("SET_IS_WRITE_ERROR");
+          }
+        },
+        (error) => {
+          console.log(error);
+          commit("SET_IS_WRITE_ERROR");
+        }
+      );
     },
   },
 };

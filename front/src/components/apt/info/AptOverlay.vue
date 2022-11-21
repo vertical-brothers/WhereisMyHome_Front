@@ -1,6 +1,7 @@
 <template>
   <div id="_overlay" class="col-12 d-flex justify-content-end">
     <review-modal></review-modal>
+    <write-modal></write-modal>
     <div class="col-md-9" @click="close"></div>
     <div id="_overlayrightend" class="col-md-3 d-flex flex-column me-5 mt-3">
       <!-- 우측 오버레이 검색바 시작 -->
@@ -32,8 +33,12 @@
       </div>
       <!-- 우측 오버레이 검색바 끝 -->
       <!-- 우측 오버레이 아파트정보칸 시작 -->
-      <div v-if="house" id="_aptdetaildiv" class="table-responsive">
-        <div class="card mb-4 rounded-3 shadow-sm border-primary">
+      <div
+        v-if="house"
+        id="_aptdetaildiv"
+        class="border-primary table-responsive rounded-3"
+      >
+        <div class="card mb-4 rounded-3 shadow-sm">
           <div class="card-header py-3 text-white bg-primary border-primary">
             <table class="table mt-1 mb-1 text-white">
               <tr class="align-middle">
@@ -77,7 +82,14 @@
               </table>
             </div>
             <!-- 아파트 리뷰 카드 시작 -->
-            <div><h4 class="fw-bold">리뷰</h4></div>
+            <div class="row">
+              <h4 class="fw-bold col">리뷰</h4>
+              <b-icon
+                @click="writeReview"
+                icon="pencil-square"
+                class="col-md-1 me-2 mt-1"
+              ></b-icon>
+            </div>
             <table class="table mb-2">
               <thead>
                 <th class="col-md-2">작성일</th>
@@ -103,7 +115,10 @@
             </div>
             <!-- 아파트 리뷰 카드 끝 -->
             <!-- 실거래가 카드 시작 -->
-            <h4 class="fw-bold">실거래가</h4>
+            <div class="row">
+              <h4 class="fw-bold">실거래가</h4>
+              <div class="col-md-2"></div>
+            </div>
             <table class="table mb-2">
               <thead>
                 <th class="col-md-2">거래년</th>
@@ -136,6 +151,7 @@
 <script>
 import { mapState, mapMutations, mapActions } from "vuex";
 import ReviewModal from "@/components/apt/info/ReviewModal.vue";
+import WriteModal from "@/components/apt/info/WriteModal.vue";
 const aptDetailStore = "aptDetailStore";
 const mainStore = "mainStore";
 const aptReviewStore = "aptReviewStore";
@@ -151,6 +167,7 @@ export default {
   },
   components: {
     ReviewModal,
+    WriteModal,
   },
   methods: {
     ...mapMutations(aptDetailStore, [
@@ -171,8 +188,10 @@ export default {
       "CLEAR_REVIEW",
       "SET_REVIEW_MODAL_SHOW",
       "CLEAR_REVIEW_MODAL_SHOW",
+      "SET_WRITE_MODAL_SHOW",
     ]),
     ...mapActions(aptReviewStore, ["getReviews"]),
+
     likeApt() {},
     close() {
       this.CLEAR_HOUSE();
@@ -286,6 +305,9 @@ export default {
       this.SET_REVIEW(review);
       this.SET_REVIEW_MODAL_SHOW();
     },
+    writeReview() {
+      this.SET_WRITE_MODAL_SHOW();
+    },
   },
   computed: {
     ...mapState(aptDetailStore, ["house", "isShow", "houselist", "deallist"]),
@@ -313,5 +335,15 @@ export default {
 #_dealtable {
   height: 100px;
   overflow: scroll;
+}
+#_aptdetaildiv {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+  overflow: scroll;
+  height: 100%;
+}
+
+#_aptdetaildiv::-webkit-scrollbar {
+  display: none; /* Chrome , Safari , Opera */
 }
 </style>

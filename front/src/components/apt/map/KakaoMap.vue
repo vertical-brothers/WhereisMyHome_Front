@@ -42,6 +42,7 @@ export default {
       "detailHouse",
       "getHouseListByAptname",
       "getHouseListByDongname",
+      "getDealByAptcode",
     ]),
     ...mapMutations(aptDetailStore, ["CLEAR_HOUSE", "CLEAR_HOUSE_LIST"]),
     ...mapMutations(mainStore, [
@@ -69,6 +70,10 @@ export default {
     // 22.11.18 장한결
     showDetail(aptCode) {
       this.detailHouse(aptCode);
+      // 거래내역 불러오기
+      this.getDealByAptcode(aptCode);
+      // 리뷰 불러오기
+      this.getReviews(aptCode);
     },
     // map객체에 마커 띄우는 함수
     // input : map object (null입력시 마커 삭제됨.)

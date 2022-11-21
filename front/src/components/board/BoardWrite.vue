@@ -22,16 +22,6 @@
               placeholder="제목 입력..."
             ></b-form-input>
           </b-form-group>
-
-          <!-- <b-form-group id="content-group" label="내용:" label-for="content">
-            <b-form-textarea
-              id="content"
-              v-model="article.content"
-              placeholder="내용 입력..."
-              rows="10"
-              max-rows="15"
-            ></b-form-textarea>
-          </b-form-group> -->
           <editor
             v-model="article.content"
             :api-key="tinymcekey"
@@ -64,7 +54,6 @@
 <script>
 import http from "@/api/http.js";
 import { TINY_MCE_KEY } from "@/config";
-// import { writeArticle } from "@/api/board"
 import Editor from "@tinymce/tinymce-vue";
 export default {
   name: "BoardWrite",

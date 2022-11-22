@@ -60,7 +60,7 @@
             글삭제
           </button>
           <button
-            v-if="userInfo.userRole == '1'"
+            v-if="userInfo.userRole == 'admin'"
             type="button"
             id="btn-delete"
             class="btn btn-outline-danger mb-3 ms-1"

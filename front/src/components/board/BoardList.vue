@@ -12,6 +12,7 @@
           <div class="row align-self-center mb-2">
             <div class="col-md-2 text-start">
               <b-button
+                v-if="userInfo.userId != null"
                 variant="btn btn-outline-primary btn-sm"
                 @click="moveWrite"
                 >글쓰기</b-button
@@ -73,6 +74,77 @@
         </div>
       </div>
     </b-container>
+    <div class="row">
+      <ul class="pagination justify-content-center">
+        <div v-if="(test = this.pgno - 1 > 0)">
+          <li class="page-item">
+            <a
+              class="page-link"
+              href="${root}/board/list?pgno=${param.pgno-1}&key=&word="
+              >이전</a
+            >
+          </li>
+        </div>
+        <div v-else-if="(test = this.pgno - 1 <= 0)">
+          <li class="page-item">
+            <a
+              class="page-link"
+              href="#"
+              onClick="alert('이전 페이지가 없습니다.')"
+              >이전</a
+            >
+          </li>
+        </div>
+
+        <v-for
+          var="page"
+          begin="${startpageno}"
+          end="${endpage}"
+          varStatus="page_num"
+        >
+          <!-- <c:choose>
+            <c:when test="${page_num.count eq param.pgno}">
+              <li class="page-item active">
+                <a
+                  class="page-link"
+                  href="${root}/board/list?pgno=${page }&key=&word=&articleno=#"
+                  >${page}</a
+                >
+              </li>
+            </c:when>
+            <c:otherwise>
+              <li class="page-item">
+                <a
+                  class="page-link"
+                  href="${root}/board/list?pgno=${page }&key=&word=&articleno=#"
+                  >${page}</a
+                >
+              </li>
+            </c:otherwise>
+          </c:choose> -->
+        </v-for>
+
+        <div v-if="test == this.pgno + 1 <= lastpage">
+          <li class="page-item">
+            <a
+              class="page-link"
+              href="${root }/board/list?pgno=${param.pgno + 1}&key=&word="
+              >다음</a
+            >
+          </li>
+        </div>
+        <div v-else-if="test == this.pgno + 1 > lastpage">
+          <li class="page-item">
+            <a
+              class="page-link"
+              href="#"
+              onClick="alert('다음 페이지가 없습니다.')"
+              >다음</a
+            >
+          </li>
+        </div>
+      </ul>
+    </div>
   </div>
 </template>
 
@@ -80,6 +152,8 @@
 import http from "@/api/http.js";
 import { listArticle } from "@/api/board.js";
 import ArticleItem from "@/components/board/ArticleItem.vue";
+import { mapState } from "vuex";
+const memberStore = "memberStore";
 export default {
   name: "BoardList",
   components: {
@@ -94,9 +168,9 @@ export default {
       searchText: "",
       selected: null,
       options: [
-        { value: "null", text: "검색조건" },
+        { value: null, text: "검색조건" },
         { value: "subject", text: "제목" },
-        { value: "userid", text: "작성자" },
+        { value: "user_id", text: "작성자" },
       ],
     };
   },
@@ -119,9 +193,14 @@ export default {
     );
   },
   methods: {
+    setPgno(tmp) {
+      this.pgno = tmp;
+    },
     boardlist() {
       http
-        .get(`/board?pgno=${this.pgno}&key=${this.subkey}&word=${this.word}`)
+        .get(
+          `/board?pgno=${this.pgno}&spp=15&key=${this.selected}&word=${this.word}`
+        )
         .then(({ data }) => {
           this.articles = data;
         })
@@ -132,6 +211,9 @@ export default {
     moveWrite() {
       this.$router.push(`/board/write`);
     },
+  },
+  computed: {
+    ...mapState(memberStore, ["userInfo"]),
   },
 };
 </script>

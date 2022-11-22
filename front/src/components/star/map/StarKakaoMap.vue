@@ -8,7 +8,7 @@ import { KAKAO_MAP_KEY } from "@/config";
 import { mapActions, mapMutations, mapState } from "vuex";
 const StarStore = "StarStore";
 const StarSubStore = "StarSubStore";
-// import { dongCodeList, houseNameList, aptCodeList } from "@/api/house";
+
 export default {
   name: "KakaoMap",
   data() {

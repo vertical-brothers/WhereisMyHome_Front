@@ -48,8 +48,8 @@ const aptDetailStore = {
     output : house object
     22.11.17 장한결
     */
-    detailHouse: ({ commit }, aptCode) => {
-      aptCodeList(
+    async detailHouse({ commit }, aptCode) {
+      await aptCodeList(
         aptCode,
         ({ data }) => {
           commit("SET_DETAIL_HOUSE", data);
@@ -97,12 +97,12 @@ const aptDetailStore = {
     output : deallist[]
     22.11.17 장한결
     */
-    getDealByAptcode: ({ commit }, aptCode) => {
-      searchDealByAptcode(
+    async getDealByAptcode({ commit }, aptCode) {
+      await searchDealByAptcode(
         aptCode,
         ({ data }) => {
           commit("SET_DEAL_LIST", data);
-          console.log(data);
+          console.log("거래정보 수집", data);
         },
         (error) => {
           console.log(error);

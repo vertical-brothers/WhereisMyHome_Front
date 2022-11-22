@@ -19,7 +19,7 @@
         >
       </div>
       <div class="col-2">
-        <b-button variant="outline-danger" @click="test(star.starNo)"
+        <b-button variant="outline-danger" @click="deleteStar(star.starNo)"
           >삭제</b-button
         >
       </div>
@@ -35,6 +35,7 @@ import mainStore from "@/store/modules/mainStore";
 const StarStore = "StarStore";
 const StarSubStore = "StarSubStore";
 const aptDetailStore = "aptDetailStore";
+const aptReviewStore = "aptReviewStore";
 export default {
   name: "StarItem",
   props: {
@@ -46,6 +47,11 @@ export default {
     return {
       markerLocal: {},
       coord: [],
+      review: null,
+
+      reviewModalShow: false,
+      writeModalShow: false,
+      isWriteError: false,
     }; /* global kakao */
   },
   methods: {
@@ -60,16 +66,25 @@ export default {
       "getHouseListByDongname",
       "getDealByAptcode",
     ]),
+    ...mapMutations(aptReviewStore, [
+      "CLEAR_REVIEWS",
+      "SET_REVIEW",
+      "CLEAR_REVIEW",
+      "SET_REVIEW_MODAL_SHOW",
+      "CLEAR_REVIEW_MODAL_SHOW",
+      "SET_WRITE_MODAL_SHOW",
+    ]),
+    ...mapActions(aptReviewStore, ["getReviews"]),
     ...mapMutations(mainStore, ["SET_MARKERS"]),
 
-    makeArray(lat, lng) {
-      this.coord.push(lat);
-      this.coord.push(lng);
-    },
-    test(starno) {
+    /* 
+    관심 지역 삭제 method
+    2022-11-22  이인재
+    */
+    async deleteStar(starno) {
       let token = sessionStorage.getItem("access-token");
       console.log(this.star.starno + " " + starno);
-      axios
+      await axios
         .create({
           baseURL: API_BASE_URL,
           headers: {
@@ -87,13 +102,15 @@ export default {
           console.log(error);
         });
     },
-    likeApt() {},
     close() {
       this.CLEAR_HOUSE();
     },
+
+    /*
+    마커 조회 method
+    2022-11-22 이인재
+    */
     search(lat, lng, aptCode, e) {
-      // console.log(lat + " ++ " + lng);
-      // console.log(coord[0], coord[1]);
       e.preventDefault;
       // this.loadMarkers();
       this.markerLocal = new kakao.maps.Marker({
@@ -102,6 +119,7 @@ export default {
         clickable: true,
       });
       this.mapCenterMove(lat, lng, this.zoomLevel);
+      this.showDetail(aptCode);
       kakao.maps.event.addListener(this.markerLocal, "click", () => {
         this.showDetail(aptCode);
         this.mapCenterMove(lat, lng, 3);
@@ -133,7 +151,7 @@ export default {
         // 그 후 지도 중심 이동
         kakao.maps.event.addListener(this.markerLocal[i], "click", () => {
           this.showDetail(h.aptCode);
-          this.mapCenterMove(h.lat, h.lng, 3);
+          this.mapCenterMove(h.lat, h.lng, 5);
         });
       }
       console.log(
@@ -160,10 +178,14 @@ export default {
     showDetail(aptCode) {
       // 아파트 상세정보 불러오기
       this.detailHouse(aptCode);
+      console.log("상세 정보 불러옴 : ", this.houselist);
       // 거래내역 불러오기
       this.getDealByAptcode(aptCode);
+      console.log("거래내역 정보 불러옴 : ", this.deallist);
+
       // 리뷰 불러오기
       this.getReviews(aptCode);
+      console.log("리뷰 정보 불러옴");
     },
     reviewDetail(review) {
       this.SET_REVIEW(review);
@@ -176,7 +198,8 @@ export default {
   created() {},
   computed: {
     ...mapState(StarStore, ["house", "ishow", "houselist", "deallist"]),
-    ...mapState(StarSubStore, ["aptList", "map", "markers"]),
+    ...mapState(StarSubStore, ["map", "markers"]),
+    ...mapState(aptReviewStore, ["reviews", "reviewForceUpdate"]),
   },
   filters: {
     roadNumberFilter(value) {

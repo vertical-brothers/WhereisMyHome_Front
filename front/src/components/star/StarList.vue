@@ -21,7 +21,9 @@
         </div>
 
         <div class="col-lg-8 rounded border">
+          <!-- <star-kakao-map> <star-overlay /></star-kakao-map> -->
           <star-kakao-map />
+          <star-overlay />
         </div>
       </div>
     </div>
@@ -34,12 +36,13 @@ import StarKakaoMap from "@/components/star/map/StarKakaoMap.vue";
 import StarStore from "@/store/modules/StarStore.js";
 
 import { mapActions, mapState } from "vuex";
+import StarOverlay from "@/components/star/StarOverlay.vue";
 
 const memberStore = "memberStore";
 
 export default {
   name: "StarList",
-  components: { StarItem, StarKakaoMap },
+  components: { StarItem, StarKakaoMap, StarOverlay },
 
   data() {
     return {

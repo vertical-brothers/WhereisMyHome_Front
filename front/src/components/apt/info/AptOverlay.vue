@@ -204,14 +204,6 @@ export default {
       } else if (this.searchKeyword == "") {
         alert("검색 키워드를 입력해주세요.");
       }
-
-      if (this.houselist.length > 0) {
-        this.mapCenterMove(
-          this.houselist[0].lat,
-          this.houselist[0].lng,
-          this.zoomLevel
-        );
-      }
     },
     // 검색조건 받아서 마커생성 함수 호출
     // 검색조건 있을때만 동작
@@ -231,7 +223,7 @@ export default {
         // 검색 조건 아파트명
         if (this.searchOption === "apartmentName") {
           // 비동기호출
-          this.getHouseListByAptname(this.searchKeyword);
+          await this.getHouseListByAptname(this.searchKeyword);
           // 마커생성
           this.createMarkers();
           // 마커 부착
@@ -242,8 +234,14 @@ export default {
           await this.getHouseListByDongname(this.searchKeyword);
           this.createMarkers();
           this.setMarkers(this.map);
-
           this.CLEAR_SEARCH;
+        }
+        if (this.houselist.length > 0) {
+          this.mapCenterMove(
+            this.houselist[0].lat,
+            this.houselist[0].lng,
+            this.zoomLevel
+          );
         }
       }
     },

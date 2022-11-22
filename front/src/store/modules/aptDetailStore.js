@@ -64,8 +64,8 @@ const aptDetailStore = {
     output : houses[]
     22.11.17 장한결
     */
-    getHouseListByAptname: ({ commit }, aptName) => {
-      houseNameList(
+    async getHouseListByAptname({ commit }, aptName) {
+      await houseNameList(
         aptName,
         ({ data }) => {
           //console.log(data);

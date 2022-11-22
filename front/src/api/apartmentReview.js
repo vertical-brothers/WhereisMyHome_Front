@@ -41,4 +41,13 @@ async function updateReviewApi(review, success, fail) {
     .catch(fail);
 }
 
-export { searchApartmentReviewByAptcode, writeReviewApi, updateReviewApi };
+async function deleteReviewApi(id, success, fail) {
+  await api.delete(`/aptreview/${id}`).then(success).catch(fail);
+}
+
+export {
+  searchApartmentReviewByAptcode,
+  writeReviewApi,
+  updateReviewApi,
+  deleteReviewApi,
+};

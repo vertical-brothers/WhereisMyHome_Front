@@ -92,10 +92,15 @@
         작성
       </b-button>
       <!-- Emulate built in modal footer ok and cancel button actions -->
-      <b-button size="sm" variant="success" @click="updateFlip">
+      <b-button
+        v-if="!isUpdate"
+        size="sm"
+        variant="success"
+        @click="updateFlip"
+      >
         수정
       </b-button>
-      <b-button size="sm" variant="danger" @click="deleteReview">
+      <b-button size="sm" variant="danger" @click="deleteReviewRun">
         삭제
       </b-button>
       <!-- Button with custom close trigger value -->
@@ -138,7 +143,12 @@ export default {
     },
   },
   methods: {
-    ...mapActions(aptReviewStore, ["clearModal", "updateReview", "getReviews"]),
+    ...mapActions(aptReviewStore, [
+      "clearModal",
+      "updateReview",
+      "getReviews",
+      "deleteReview",
+    ]),
     ...mapMutations(aptReviewStore, [
       "CLEAR_REVIEW",
       "CLEAR_REVIEW_MODAL_SHOW",
@@ -160,13 +170,17 @@ export default {
         alert("내용을 입력해주세요.");
         return;
       }
-      await this.updateReview(this.reviewBeforeupdate).then(() => {
-        this.getReviews(this.review.aptCode);
-      });
+      await this.updateReview(this.reviewBeforeupdate);
+      this.getReviews(this.review.aptCode);
       this.$bvModal.hide("_modal");
     },
-    deleteReview() {
-      this.$bvModal.hide("_modal");
+    async deleteReviewRun(e) {
+      e.preventDefault;
+      if (window.confirm("정말 삭제하시겠습니까?")) {
+        await this.deleteReview(this.review.id);
+        this.getReviews(this.review.aptCode);
+        this.$bvModal.hide("_modal");
+      }
     },
     closeModal() {
       this.$bvModal.hide("_modal");

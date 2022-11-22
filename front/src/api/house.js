@@ -31,8 +31,8 @@ function dongCodeList(dongCode, success, fail) {
 /*
 아파트 이름을 통해 아파트 정보를 받아오는 요청
 */
-function houseNameList(apartmentName, success, fail) {
-  api.get(`/houseinfo/name/${apartmentName}`).then(success).catch(fail);
+async function houseNameList(apartmentName, success, fail) {
+  await api.get(`/houseinfo/name/${apartmentName}`).then(success).catch(fail);
 }
 
 /* 

@@ -2,6 +2,7 @@ import {
   searchApartmentReviewByAptcode,
   writeReviewApi,
   updateReviewApi,
+  deleteReviewApi,
 } from "@/api/apartmentReview.js";
 /*
 아파트 리뷰 관련 통신 vuex
@@ -18,6 +19,7 @@ const aptReviewStore = {
     reviewModalShow: false,
     writeModalShow: false,
     isWriteError: false,
+    isDeleteError: false,
   },
   mutations: {
     SET_REVIEWS(state, reviews) {
@@ -49,6 +51,12 @@ const aptReviewStore = {
     },
     CLEAR_IS_WRITE_ERROR(state) {
       state.isWriteError = false;
+    },
+    SET_IS_DELETE_ERROR(state) {
+      state.isDeleteError = true;
+    },
+    CLEAR_IS_DELETE_ERROR(state) {
+      state.isDeleteError = false;
     },
   },
   actions: {
@@ -102,6 +110,22 @@ output : review List
         (error) => {
           console.log(error);
           commit("SET_IS_WRITE_ERROR");
+        }
+      );
+    },
+    async deleteReview({ commit }, id) {
+      await deleteReviewApi(
+        id,
+        ({ data }) => {
+          if (data) {
+            commit("CLEAR_IS_DELETE_ERROR");
+          } else {
+            commit("SET_IS_DELETE_ERROR");
+          }
+        },
+        (error) => {
+          console.log(error);
+          commit("SET_IS_DELETE_ERROR");
         }
       );
     },

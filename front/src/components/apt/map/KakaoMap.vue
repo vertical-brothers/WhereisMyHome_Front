@@ -8,6 +8,7 @@ import { KAKAO_MAP_KEY } from "@/config";
 import { mapActions, mapMutations, mapState } from "vuex";
 const aptDetailStore = "aptDetailStore";
 const mainStore = "mainStore";
+const aptReviewStore = "aptReviewStore";
 // import { dongCodeList, houseNameList, aptCodeList } from "@/api/house";
 export default {
   name: "KakaoMap",
@@ -37,6 +38,7 @@ export default {
       "getHouseListByDongname",
       "getDealByAptcode",
     ]),
+    ...mapActions(aptReviewStore, ["getReviews"]),
     ...mapMutations(aptDetailStore, ["CLEAR_HOUSE", "CLEAR_HOUSE_LIST"]),
     ...mapMutations(mainStore, [
       "CLEAR_SEARCH",
@@ -97,7 +99,7 @@ export default {
     // 검색조건 받아서 마커생성 함수 호출
     // 검색조건 있을때만 동작
     // 22.11.17 장한결
-    loadMarkers() {
+    async loadMarkers() {
       // 1. 마커 전부 제거
       this.setMarkers(null);
       this.CLEAR_MARKER;
@@ -112,7 +114,7 @@ export default {
         // 검색 조건 아파트명
         if (this.searchOption === "apartmentName") {
           // 비동기호출
-          this.getHouseListByAptname(this.searchKeyword);
+          await this.getHouseListByAptname(this.searchKeyword);
           // 마커생성
           this.createMarkers();
           // 마커 부착
@@ -120,19 +122,17 @@ export default {
           this.CLEAR_SEARCH;
           // 검색 조건 동이름
         } else if (this.searchOption === "dongName") {
-          this.getHouseListByDongname(this.searchKeyword).then(() => {
-            this.createMarkers();
-            this.setMarkers(this.map);
-            if (this.houselist.length > 0) {
-              this.mapCenterMove(
-                this.houselist[0].lat,
-                this.houselist[0].lng,
-                this.zoomLevel
-              );
-            }
-          });
-
+          await this.getHouseListByDongname(this.searchKeyword);
+          this.createMarkers();
+          this.setMarkers(this.map);
           this.CLEAR_SEARCH;
+        }
+        if (this.houselist.length > 0) {
+          this.mapCenterMove(
+            this.houselist[0].lat,
+            this.houselist[0].lng,
+            this.zoomLevel
+          );
         }
       }
     },
@@ -144,6 +144,7 @@ export default {
         // 클릭가능한 마커 생성
         this.markerLocal.push(
           new kakao.maps.Marker({
+            map: this.map,
             position: new kakao.maps.LatLng(h.lat, h.lng),
             clickable: true,
           })

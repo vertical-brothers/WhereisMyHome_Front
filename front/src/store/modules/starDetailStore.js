@@ -17,11 +17,16 @@ const aptDetailStore = {
     houselist: [],
     // 아파트 거래내역
     deallist: [],
+    starno: "",
+    isStarApartment: true,
   },
   mutations: {
     SET_DETAIL_HOUSE(state, house) {
       state.house = house;
       state.isShow = true;
+    },
+    SET_STARNO(state, starno) {
+      state.starno = starno;
     },
     CLEAR_HOUSE(state) {
       state.house = null;
@@ -48,11 +53,13 @@ const aptDetailStore = {
     output : house object
     22.11.17 장한결
     */
-    async detailHouse({ commit }, aptCode) {
+    async detailHouse({ commit }, aptCode, starno) {
+      commit("SET_STARNO", starno);
       await aptCodeList(
         aptCode,
         ({ data }) => {
           commit("SET_DETAIL_HOUSE", data);
+          console.log(starno);
         },
         (error) => {
           console.log(error);

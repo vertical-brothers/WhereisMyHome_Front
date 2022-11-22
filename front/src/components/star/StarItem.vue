@@ -9,7 +9,9 @@
     tag="article"
     class="mb-2"
     style="text-align: left"
-    @click="search(star.lat, star.lng, star.aptCode, $event)"
+    @click="
+      setStarno(star.starNo), search(star.lat, star.lng, star.aptCode, $event)
+    "
   >
     <div class="row">
       <div class="col-10">
@@ -18,11 +20,11 @@
           {{ star.apartmentName }}</b-card-text
         >
       </div>
-      <div class="col-2">
+      <!-- <div class="col-2">
         <b-button variant="outline-danger" @click="deleteStar(star.starNo)"
           >삭제</b-button
         >
-      </div>
+      </div> -->
     </div>
   </b-card>
 </template>
@@ -52,6 +54,7 @@ export default {
       reviewModalShow: false,
       writeModalShow: false,
       isWriteError: false,
+      starno: "",
     }; /* global kakao */
   },
   methods: {
@@ -95,7 +98,8 @@ export default {
         .delete(`/star/${starno}`)
         .then(({ data }) => {
           console.log(data.message);
-          this.$router.go(this.$router.current);
+          this.CLEAR_HOUSE();
+          // this.$router.go(this.$router.current);
           // this.$router.push(`/star/list`);
         })
         .catch((error) => {
@@ -105,7 +109,11 @@ export default {
     close() {
       this.CLEAR_HOUSE();
     },
-
+    setStarno(starno) {
+      console.log("setStarno->", starno);
+      this.starno = starno;
+      console.log("setStarno->", starno);
+    },
     /*
     마커 조회 method
     2022-11-22 이인재
@@ -135,33 +143,6 @@ export default {
       // 마커 부착
       this.setMarkers(this.map);
     },
-    // createMarkers() {
-    //   console.log(this.houselist);
-    //   this.markerLocal = [];
-    //   for (var i = 0; i < this.houselist.length; i++) {
-    //     let h = this.houselist[i];
-    //     // 클릭가능한 마커 생성
-    //     this.markerLocal.push(
-    //       new kakao.maps.Marker({
-    //         position: new kakao.maps.LatLng(h.lat, h.lng),
-    //         clickable: true,
-    //       })
-    //     );
-    //     // 클릭시 화면 우측 오버레이 생성 이벤트 부착
-    //     // 그 후 지도 중심 이동
-    //     kakao.maps.event.addListener(this.markerLocal[i], "click", () => {
-    //       this.showDetail(h.aptCode);
-    //       this.mapCenterMove(lat, lng, 5);
-    //     });
-    //   }
-    //   console.log(
-    //     "markers created with ",
-    //     this.searchOption,
-    //     this.searchKeyword,
-    //     this.markers
-    //   );
-    //   this.SET_MARKERS(this.markerLocal);
-    // },
     mapCenterMove(lat, lng, level) {
       this.map.setCenter(new kakao.maps.LatLng(lat, lng));
       this.map.setLevel(level, { anchor: new kakao.maps.LatLng(lat, lng) });
@@ -176,8 +157,9 @@ export default {
     // input : aptCode (PK)
     // 22.11.18 장한결
     async showDetail(aptCode) {
+      console.log("showDetail -> detailHouse", this.star.starNo);
       // 아파트 상세정보 불러오기
-      await this.detailHouse(aptCode);
+      await this.detailHouse(aptCode, this.starno);
       console.log("상세 정보 불러옴 : ", this.houselist);
       // 거래내역 불러오기
       await this.getDealByAptcode(aptCode);

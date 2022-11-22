@@ -12,7 +12,7 @@
           <div class="row align-self-center mb-2">
             <div class="col-md-2 text-start">
               <b-button
-                v-if="userInfo.userId != null"
+                v-if="userInfo != null"
                 variant="btn btn-outline-primary btn-sm"
                 @click="moveWrite"
                 >글쓰기</b-button
@@ -104,7 +104,7 @@
 
         <div v-if="test == this.pgno + 1 <= this.lastpage">
           <li class="page-item">
-            <a class="page-link" @click="nextPgno(), boardlist()">다음</a>
+            <a class="page-link" @click="nextPgno(), boardlistV2()">다음</a>
           </li>
         </div>
         <div v-else-if="test == this.pgno + 1 > this.lastpage">
@@ -187,15 +187,22 @@ export default {
     },
 
     boardlistV2(no) {
-      console.log("pgno is", no);
-      http
-        .get(`/board?pgno=${no}&key=${this.selected}&word=${this.word}`)
-        .then(({ data }) => {
-          this.articles = data;
-        })
-        .catch((error) => {
+      let param = {
+        pgno: no,
+        spp: 20,
+        key: this.subkey,
+        word: this.word,
+      };
+      listArticle(
+        param,
+        (response) => {
+          this.articles = response.data;
+        },
+        (error) => {
           console.log(error);
-        });
+        }
+      );
+      this.totalCount();
     },
     moveWrite() {
       this.$router.push(`/board/write`);

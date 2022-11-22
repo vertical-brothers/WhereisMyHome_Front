@@ -78,11 +78,7 @@
       <ul class="pagination justify-content-center">
         <div v-if="(test = this.pgno - 1 > 0)">
           <li class="page-item">
-            <a
-              class="page-link"
-              href="${root}/board/list?pgno=${param.pgno-1}&key=&word="
-              >이전</a
-            >
+            <a class="page-link" @click="prevPgno(), boardlist()">이전</a>
           </li>
         </div>
         <div v-else-if="(test = this.pgno - 1 <= 0)">
@@ -96,44 +92,22 @@
           </li>
         </div>
 
-        <v-for
-          var="page"
-          begin="${startpageno}"
-          end="${endpage}"
-          varStatus="page_num"
-        >
-          <!-- <c:choose>
-            <c:when test="${page_num.count eq param.pgno}">
-              <li class="page-item active">
-                <a
-                  class="page-link"
-                  href="${root}/board/list?pgno=${page }&key=&word=&articleno=#"
-                  >${page}</a
-                >
-              </li>
-            </c:when>
-            <c:otherwise>
-              <li class="page-item">
-                <a
-                  class="page-link"
-                  href="${root}/board/list?pgno=${page }&key=&word=&articleno=#"
-                  >${page}</a
-                >
-              </li>
-            </c:otherwise>
-          </c:choose> -->
-        </v-for>
-
-        <div v-if="test == this.pgno + 1 <= lastpage">
-          <li class="page-item">
+        <div v-for="index in [-2, -1, 0, 1, 2]" :key="index">
+          <li class="page-item active">
             <a
               class="page-link"
-              href="${root }/board/list?pgno=${param.pgno + 1}&key=&word="
-              >다음</a
+              @click="boardlistV2((pgno <= 3 ? 3 : pgno) + index)"
+              >{{ (pgno <= 3 ? 3 : pgno) + index }}</a
             >
           </li>
         </div>
-        <div v-else-if="test == this.pgno + 1 > lastpage">
+
+        <div v-if="test == this.pgno + 1 <= this.lastpage">
+          <li class="page-item">
+            <a class="page-link" @click="nextPgno(), boardlist()">다음</a>
+          </li>
+        </div>
+        <div v-else-if="test == this.pgno + 1 > this.lastpage">
           <li class="page-item">
             <a
               class="page-link"
@@ -162,11 +136,14 @@ export default {
   data() {
     return {
       articles: [],
+      total: 0,
       pgno: 1,
+      tmpPgno: 3,
       subkey: "",
       word: "",
       searchText: "",
       selected: null,
+      lastpage: 1,
       options: [
         { value: null, text: "검색조건" },
         { value: "subject", text: "제목" },
@@ -177,7 +154,7 @@ export default {
   created() {
     let param = {
       pgno: this.pgno,
-      // spp: 20,
+      spp: 20,
       key: this.subkey,
       word: this.word,
     };
@@ -191,16 +168,28 @@ export default {
         console.log(error);
       }
     );
+    this.totalCount();
   },
   methods: {
-    setPgno(tmp) {
-      this.pgno = tmp;
+    nextPgno(no) {
+      this.pgno = no;
     },
     boardlist() {
+      console.log("pgno is", this.pgno);
       http
-        .get(
-          `/board?pgno=${this.pgno}&spp=15&key=${this.selected}&word=${this.word}`
-        )
+        .get(`/board?pgno=${this.pgno}&key=${this.selected}&word=${this.word}`)
+        .then(({ data }) => {
+          this.articles = data;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+
+    boardlistV2(no) {
+      console.log("pgno is", no);
+      http
+        .get(`/board?pgno=${no}&key=${this.selected}&word=${this.word}`)
         .then(({ data }) => {
           this.articles = data;
         })
@@ -210,6 +199,18 @@ export default {
     },
     moveWrite() {
       this.$router.push(`/board/write`);
+    },
+    totalCount() {
+      http
+        .get(`/board/total?key=${this.selected}&word=${this.word}`)
+        .then(({ data }) => {
+          this.total = data;
+          this.lastpage = parseInt(this.total / 20);
+          console.log(this.total);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
   },
   computed: {

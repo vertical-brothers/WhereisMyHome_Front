@@ -62,28 +62,48 @@
                 class="col-md-1 me-2 mt-1"
               ></b-icon>
             </div>
-            <table class="table mb-2">
-              <thead>
-                <th class="col-md-2">작성일</th>
-                <th class="col-md-6">제목</th>
-                <th class="col-md-2">별점</th>
-              </thead>
-            </table>
-            <div style="height: 230px; overflow: scroll">
-              <table class="table mb-4">
-                <!-- <tr>
-                  <td>좋은 집이에요</td>
-                  <td>ssafy</td>
-                  <td>별점</td>
-                </tr> -->
-                <tr v-for="review in reviews" :key="review.id">
-                  <td class="col-md-2">{{ review.date | dateFilter }}</td>
-                  <td class="col-md-6" @click="reviewDetail(review)">
-                    {{ review.subject }}
-                  </td>
-                  <td class="col-md-2">{{ review.star1 }}</td>
-                </tr>
-              </table>
+            <div style="height: 350px; overflow: scroll">
+              <div v-for="review in reviews" :key="review.id" class="card mb-3">
+                <div class="card-header row">
+                  <b-icon
+                    icon="person"
+                    scale="1"
+                    class="col col-md-2 mt-1"
+                  ></b-icon>
+                  <div class="col col-md-4 text-start fw-bold">
+                    {{ review.userId }}
+                  </div>
+                  <b-icon
+                    icon="calendar2-date"
+                    scale="1"
+                    class="col-md-2 mt-1"
+                  ></b-icon>
+                  <div class="col-md-4 text-start fw-bold">
+                    {{ review.date | dateFilter }}
+                  </div>
+                </div>
+                <div class="card-body">
+                  <div class="row mb-2">
+                    <h4 class="card-title fw-bold">
+                      {{ review.subject }}
+                    </h4>
+                  </div>
+
+                  <p>
+                    <b-form-rating
+                      v-model="review.star1"
+                      readonly
+                    ></b-form-rating>
+                  </p>
+                  <button
+                    type="button"
+                    class="btn btn-primary"
+                    @click="reviewDetail(review)"
+                  >
+                    내용 보기
+                  </button>
+                </div>
+              </div>
             </div>
             <!-- 아파트 리뷰 카드 끝 -->
             <!-- 실거래가 카드 시작 -->

@@ -17,6 +17,7 @@ const aptDetailStore = {
     houselist: [],
     // 아파트 거래내역
     deallist: [],
+    isStarApartment: false,
   },
   mutations: {
     SET_DETAIL_HOUSE(state, house) {
@@ -40,6 +41,12 @@ const aptDetailStore = {
     },
     CLEAR_DEAL_LIST(state) {
       state.deallist = [];
+    },
+    SET_IS_STAR_APARTMENT(state) {
+      state.isStarApartment = true;
+    },
+    CLEAR_IS_STAR_APARTMENT(state) {
+      state.isStarApartment = false;
     },
   },
   actions: {

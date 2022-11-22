@@ -42,6 +42,7 @@
             </button>
           </router-link>
           <button
+            v-if="userInfo.userName == userId"
             type="button"
             id="btn-mv-modify"
             class="btn btn-outline-success mb-3 ms-1"
@@ -50,6 +51,25 @@
             글수정
           </button>
           <button
+            v-if="userInfo.userRole == 1"
+            type="button"
+            id="btn-delete"
+            class="btn btn-outline-danger mb-3 ms-1"
+            @click="deleteArticle(articleNo)"
+          >
+            글삭제
+          </button>
+          <button
+            v-if="userInfo.userRole == '1'"
+            type="button"
+            id="btn-delete"
+            class="btn btn-outline-danger mb-3 ms-1"
+            @click="deleteArticle(articleNo)"
+          >
+            글삭제
+          </button>
+          <button
+            v-else-if="userInfo.userName == userId"
             type="button"
             id="btn-delete"
             class="btn btn-outline-danger mb-3 ms-1"
@@ -65,6 +85,9 @@
 
 <script>
 import http from "@/api/http.js";
+import { mapState } from "vuex";
+const memberStore = "memberStore";
+
 export default {
   name: "BoardDetail",
   data() {
@@ -108,6 +131,9 @@ export default {
         this.$router.push({ name: "list" });
       });
     },
+  },
+  computed: {
+    ...mapState(memberStore, ["userInfo"]),
   },
 };
 </script>

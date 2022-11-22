@@ -6,6 +6,7 @@
 <script>
 import { KAKAO_MAP_KEY } from "@/config";
 import { mapActions, mapMutations, mapState } from "vuex";
+import { checkStar, writeStarApi, deleteStar } from "@/api/star.js";
 const aptDetailStore = "aptDetailStore";
 const mainStore = "mainStore";
 const aptReviewStore = "aptReviewStore";
@@ -19,6 +20,16 @@ export default {
       dongCode: null,
       houseName: null,
       zoomLevel: 4,
+      star: {
+        apartmentName: "",
+        aptCode: "",
+        dong: "",
+        lat: "",
+        lng: "",
+        roadName: "",
+        starNo: "",
+        userId: "",
+      },
     };
   },
   mounted() {
@@ -39,7 +50,12 @@ export default {
       "getDealByAptcode",
     ]),
     ...mapActions(aptReviewStore, ["getReviews"]),
-    ...mapMutations(aptDetailStore, ["CLEAR_HOUSE", "CLEAR_HOUSE_LIST"]),
+    ...mapMutations(aptDetailStore, [
+      "CLEAR_HOUSE",
+      "CLEAR_HOUSE_LIST",
+      "SET_IS_STAR_APARTMENT",
+      "CLEAR_IS_STAR_APARTMENT",
+    ]),
     ...mapMutations(mainStore, [
       "CLEAR_SEARCH",
       "SET_MAP",
@@ -69,6 +85,22 @@ export default {
       this.getDealByAptcode(aptCode);
       // 리뷰 불러오기
       this.getReviews(aptCode);
+      this.CLEAR_IS_STAR_APARTMENT();
+      console.log("별체크", aptCode, this.isStarApartment);
+      checkStar(
+        aptCode,
+        sessionStorage.getItem("access-token"),
+        ({ data }) => {
+          if (data.star) {
+            console.log("별정보", data.star);
+            this.star = data.star;
+            this.SET_IS_STAR_APARTMENT();
+          }
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
     },
     // map객체에 마커 띄우는 함수
     // input : map object (null입력시 마커 삭제됨.)
@@ -173,11 +205,65 @@ export default {
       this.map.setCenter(new kakao.maps.LatLng(lat, lng));
       this.map.setLevel(level, { anchor: new kakao.maps.LatLng(lat, lng) });
     },
+    setStar() {
+      if (this.isStarApartment) {
+        deleteStar(
+          this.star.starNo,
+          sessionStorage.getItem("access-token"),
+          ({ data }) => {
+            if (data.message === "success") {
+              console.log("관심지역 삭제 성공");
+            } else {
+              console.log("관심지역 삭제 실패!");
+            }
+            this.star.apartmentName = "";
+            this.star.aptCode = "";
+            this.star.dong = "";
+            this.star.lat = "";
+            this.star.lng = "";
+            this.star.roadName = "";
+            this.star.starNo = "";
+            this.star.userId = "";
+          },
+          (error) => {
+            console.log(error);
+          }
+        );
+      } else {
+        this.star.apartmentName = this.house.apartmentName;
+        this.star.aptCode = this.house.aptCode;
+        this.star.dong = this.house.dong;
+        this.star.lat = this.house.lat;
+        this.star.lng = this.house.lng;
+        this.star.roadName = this.house.roadName;
+        writeStarApi(
+          this.star,
+          sessionStorage.getItem("access-token"),
+          ({ data }) => {
+            if (data.message === "success") {
+              console.log("관심지역 입력 성공");
+              console.log("들어온 pk : ", data.starNo);
+              this.star.starNo = data.starNo;
+            } else {
+              console.log("관심지역 입력 실패!");
+            }
+          },
+          (error) => {
+            console.log(error);
+          }
+        );
+      }
+      if (this.isStarApartment) {
+        this.SET_IS_STAR_APARTMENT();
+      } else {
+        this.CLEAR_IS_STAR_APARTMENT();
+      }
+    },
   },
 
   computed: {
     ...mapState(mainStore, ["searchKeyword", "searchOption", "map", "markers"]),
-    ...mapState(aptDetailStore, ["houselist"]),
+    ...mapState(aptDetailStore, ["houselist", "isStarApartment"]),
   },
 };
 </script>

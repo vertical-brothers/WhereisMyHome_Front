@@ -7,6 +7,8 @@ import memberStore from "@/store/modules/memberStore";
 import aptReviewStore from "@/store/modules/aptReviewStore";
 import StarSubStore from "@/store/modules/StarSubStore";
 import StarStore from "@/store/modules/StarStore";
+import starDetailStore from "@/store/modules/starDetailStore";
+import starReviewStore from "@/store/modules/starReviewStore";
 
 Vue.use(Vuex);
 
@@ -18,5 +20,7 @@ export default new Vuex.Store({
     aptReviewStore,
     StarStore,
     StarSubStore,
+    starDetailStore,
+    starReviewStore,
   },
 });

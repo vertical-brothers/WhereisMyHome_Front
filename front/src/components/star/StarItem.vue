@@ -34,8 +34,8 @@ import mainStore from "@/store/modules/mainStore";
 
 const StarStore = "StarStore";
 const StarSubStore = "StarSubStore";
-const aptDetailStore = "aptDetailStore";
-const aptReviewStore = "aptReviewStore";
+const starDetailStore = "starDetailStore";
+const starReviewStore = "starReviewStore";
 export default {
   name: "StarItem",
   props: {
@@ -60,13 +60,13 @@ export default {
       "CLEAR_HOUSE_LIST",
       "CLEAR_DEAL_LIST",
     ]),
-    ...mapActions(aptDetailStore, [
+    ...mapActions(starDetailStore, [
       "detailHouse",
       "getHouseListByAptname",
       "getHouseListByDongname",
       "getDealByAptcode",
     ]),
-    ...mapMutations(aptReviewStore, [
+    ...mapMutations(starReviewStore, [
       "CLEAR_REVIEWS",
       "SET_REVIEW",
       "CLEAR_REVIEW",
@@ -74,10 +74,10 @@ export default {
       "CLEAR_REVIEW_MODAL_SHOW",
       "SET_WRITE_MODAL_SHOW",
     ]),
-    ...mapActions(aptReviewStore, ["getReviews"]),
+    ...mapActions(starReviewStore, ["getReviews"]),
     ...mapMutations(mainStore, ["SET_MARKERS"]),
 
-    /* 
+    /*
     관심 지역 삭제 method
     2022-11-22  이인재
     */
@@ -119,7 +119,7 @@ export default {
         clickable: true,
       });
       this.mapCenterMove(lat, lng, this.zoomLevel);
-      this.showDetail(aptCode);
+
       kakao.maps.event.addListener(this.markerLocal, "click", () => {
         this.showDetail(aptCode);
         this.mapCenterMove(lat, lng, 3);
@@ -135,33 +135,33 @@ export default {
       // 마커 부착
       this.setMarkers(this.map);
     },
-    createMarkers() {
-      console.log(this.houselist);
-      this.markerLocal = [];
-      for (var i = 0; i < this.houselist.length; i++) {
-        let h = this.houselist[i];
-        // 클릭가능한 마커 생성
-        this.markerLocal.push(
-          new kakao.maps.Marker({
-            position: new kakao.maps.LatLng(h.lat, h.lng),
-            clickable: true,
-          })
-        );
-        // 클릭시 화면 우측 오버레이 생성 이벤트 부착
-        // 그 후 지도 중심 이동
-        kakao.maps.event.addListener(this.markerLocal[i], "click", () => {
-          this.showDetail(h.aptCode);
-          this.mapCenterMove(h.lat, h.lng, 5);
-        });
-      }
-      console.log(
-        "markers created with ",
-        this.searchOption,
-        this.searchKeyword,
-        this.markers
-      );
-      this.SET_MARKERS(this.markerLocal);
-    },
+    // createMarkers() {
+    //   console.log(this.houselist);
+    //   this.markerLocal = [];
+    //   for (var i = 0; i < this.houselist.length; i++) {
+    //     let h = this.houselist[i];
+    //     // 클릭가능한 마커 생성
+    //     this.markerLocal.push(
+    //       new kakao.maps.Marker({
+    //         position: new kakao.maps.LatLng(h.lat, h.lng),
+    //         clickable: true,
+    //       })
+    //     );
+    //     // 클릭시 화면 우측 오버레이 생성 이벤트 부착
+    //     // 그 후 지도 중심 이동
+    //     kakao.maps.event.addListener(this.markerLocal[i], "click", () => {
+    //       this.showDetail(h.aptCode);
+    //       this.mapCenterMove(lat, lng, 5);
+    //     });
+    //   }
+    //   console.log(
+    //     "markers created with ",
+    //     this.searchOption,
+    //     this.searchKeyword,
+    //     this.markers
+    //   );
+    //   this.SET_MARKERS(this.markerLocal);
+    // },
     mapCenterMove(lat, lng, level) {
       this.map.setCenter(new kakao.maps.LatLng(lat, lng));
       this.map.setLevel(level, { anchor: new kakao.maps.LatLng(lat, lng) });
@@ -175,12 +175,12 @@ export default {
     // 카카오맵 마커 클릭시 우측 오버레이 시현 함수
     // input : aptCode (PK)
     // 22.11.18 장한결
-    showDetail(aptCode) {
+    async showDetail(aptCode) {
       // 아파트 상세정보 불러오기
-      this.detailHouse(aptCode);
+      await this.detailHouse(aptCode);
       console.log("상세 정보 불러옴 : ", this.houselist);
       // 거래내역 불러오기
-      this.getDealByAptcode(aptCode);
+      await this.getDealByAptcode(aptCode);
       console.log("거래내역 정보 불러옴 : ", this.deallist);
 
       // 리뷰 불러오기
@@ -199,7 +199,7 @@ export default {
   computed: {
     ...mapState(StarStore, ["house", "ishow", "houselist", "deallist"]),
     ...mapState(StarSubStore, ["map", "markers"]),
-    ...mapState(aptReviewStore, ["reviews", "reviewForceUpdate"]),
+    ...mapState(starReviewStore, ["reviews", "reviewForceUpdate"]),
   },
   filters: {
     roadNumberFilter(value) {

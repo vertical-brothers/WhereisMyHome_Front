@@ -54,14 +54,18 @@
 <script>
 import http from "@/api/http.js";
 import { TINY_MCE_KEY } from "@/config";
+import { mapState } from "vuex";
 import Editor from "@tinymce/tinymce-vue";
+
+const memberStore = "memberStore";
+
 export default {
   name: "BoardWrite",
   data() {
     return {
       article: {
         articleno: 0,
-        userid: "ssafy",
+        userid: "",
         subject: "",
         content: "",
       },
@@ -77,7 +81,8 @@ export default {
     },
     onSubmit(event) {
       event.preventDefault();
-
+      console.log(this.userInfo);
+      // this.article.userId = this.userInfo.userId;
       let err = true;
       let msg = "";
 
@@ -106,7 +111,7 @@ export default {
     },
     writeBoard() {
       let myData = {
-        userId: "ssafy",
+        userId: this.userInfo.userId,
         subject: this.article.subject,
         content: this.article.content,
       };
@@ -121,6 +126,9 @@ export default {
           this.moveList();
         });
     },
+  },
+  computed: {
+    ...mapState(memberStore, ["userInfo"]),
   },
 };
 </script>

@@ -37,6 +37,7 @@ import StarStore from "@/store/modules/StarStore.js";
 
 import { mapActions, mapState } from "vuex";
 import StarOverlay from "@/components/star/StarOverlay.vue";
+const aptDetailStore = "aptDetailStore";
 
 const memberStore = "memberStore";
 
@@ -64,8 +65,13 @@ export default {
       }
     );
   },
+  beforeCreate() {
+    this.house = null;
+  },
+
   computed: {
     ...mapState(memberStore, ["userInfo"]),
+    ...mapState(aptDetailStore, ["house", "isShow", "houselist", "deallist"]),
   },
 
   methods: {

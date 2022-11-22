@@ -124,37 +124,38 @@
 import { mapState, mapMutations, mapActions } from "vuex";
 import ReviewModal from "@/components/apt/info/ReviewModal.vue";
 import WriteModal from "@/components/apt/info/WriteModal.vue";
-const aptDetailStore = "aptDetailStore";
+const starDetailStore = "starDetailStore";
 const mainStore = "mainStore";
-const aptReviewStore = "aptReviewStore";
+const starReviewStore = "starReviewStore";
 
 export default {
   name: "AptOverlay",
   data() {
     return {
       markerLocal: [],
-      // searchOption: "",
-      // searchKeyword: "",
     }; /* global kakao */
   },
   components: {
     ReviewModal,
     WriteModal,
   },
+  beforeMount() {
+    this.CLEAR_HOUSE;
+  },
   methods: {
-    ...mapMutations(aptDetailStore, [
+    ...mapMutations(starDetailStore, [
       "CLEAR_HOUSE",
       "CLEAR_HOUSE_LIST",
       "CLEAR_DEAL_LIST",
     ]),
     ...mapMutations(mainStore, ["CLEAR_SEARCH, SET_SEARCH", "SET_MARKERS"]),
-    ...mapActions(aptDetailStore, [
+    ...mapActions(starDetailStore, [
       "detailHouse",
       "getHouseListByAptname",
       "getHouseListByDongname",
       "getDealByAptcode",
     ]),
-    ...mapMutations(aptReviewStore, [
+    ...mapMutations(starReviewStore, [
       "CLEAR_REVIEWS",
       "SET_REVIEW",
       "CLEAR_REVIEW",
@@ -162,7 +163,7 @@ export default {
       "CLEAR_REVIEW_MODAL_SHOW",
       "SET_WRITE_MODAL_SHOW",
     ]),
-    ...mapActions(aptReviewStore, ["getReviews"]),
+    ...mapActions(starReviewStore, ["getReviews"]),
 
     likeApt() {},
     close() {
@@ -235,9 +236,9 @@ export default {
     },
   },
   computed: {
-    ...mapState(aptDetailStore, ["house", "isShow", "houselist", "deallist"]),
+    ...mapState(starDetailStore, ["house", "isShow", "houselist", "deallist"]),
     ...mapState(mainStore, ["map", "markers"]),
-    ...mapState(aptReviewStore, ["reviews", "reviewForceUpdate"]),
+    ...mapState(starReviewStore, ["reviews", "reviewForceUpdate"]),
   },
   filters: {
     roadNumberFilter(value) {

@@ -1,4 +1,5 @@
 import { tokenInstance } from "@/api/index.js";
+import { API_BASE_URL } from "@/config";
 import axios from "axios";
 
 function listStar(token, success, fail) {
@@ -32,4 +33,44 @@ async function writeStarApi(star, token, success, fail) {
     .catch(fail);
 }
 
-export { listStar, deleteStar, checkStar, writeStarApi };
+// async function deleteStar(starno) {
+//   let token = sessionStorage.getItem("access-token");
+//   console.log(this.star.starno + " " + starno);
+//   await axios
+//     .create({
+//       baseURL: API_BASE_URL,
+//       headers: {
+//         "Content-type": "application/json",
+//         "access-token": token,
+//       },
+//     })
+//     .delete(`/star/${starno}`)
+//     .then(({ data }) => {
+//       console.log(data.message);
+//       this.CLEAR_HOUSE();
+//       this.$router.go(this.$router.currentRoute).catch(() => {});
+//       // window.location.reload(true);
+//       // this.$router.go();
+//       // this.$router.push(`/star/list`);
+//     })
+//     .catch((error) => {
+//       console.log(error);
+//     });
+// }
+
+function deleteStarv2(starno, success, fail) {
+  let token = sessionStorage.getItem("access-token");
+  axios
+    .create({
+      baseURL: API_BASE_URL,
+      headers: {
+        "Content-type": "application/json",
+        "access-token": token,
+      },
+    })
+    .delete(`/star/${starno}`)
+    .then(success)
+    .catch(fail);
+}
+
+export { listStar, deleteStar, checkStar, writeStarApi, deleteStarv2 };

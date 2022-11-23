@@ -26,7 +26,7 @@
                 <td class="col-2">
                   <!--아파트 관심추가 버튼-->
                   <button
-                    @click="setStar"
+                    @click="close(), deleteStar(starno)"
                     class="btn btn-primary"
                     type="button"
                   >
@@ -155,6 +155,7 @@ const starDetailStore = "starDetailStore";
 const mainStore = "mainStore";
 const starReviewStore = "starReviewStore";
 const aptDetailStore = "aptDetailStore";
+const StarStore = "StarStore";
 
 export default {
   name: "AptOverlay",
@@ -180,7 +181,7 @@ export default {
   },
   beforeMount() {
     if (this.markers) {
-      this.setMarkers(null);
+      // this.setMarkers(null);
       this.CLEAR_MARKER;
     }
     if (this.house) {
@@ -214,6 +215,7 @@ export default {
       "SET_IS_STAR_APARTMENT",
       "CLEAR_IS_STAR_APARTMENT",
     ]),
+    ...mapActions(StarStore["deleteStar"]),
     likeApt() {},
     close() {
       this.CLEAR_HOUSE();
@@ -306,6 +308,8 @@ export default {
             this.star.roadName = "";
             this.star.starNo = "";
             this.star.userId = "";
+            // this.isStarApartment = false;
+            this.close();
           },
           (error) => {
             console.log(error);

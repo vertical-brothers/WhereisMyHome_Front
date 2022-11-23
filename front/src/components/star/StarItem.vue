@@ -20,11 +20,6 @@
           {{ star.apartmentName }}</b-card-text
         >
       </div>
-      <!-- <div class="col-2">
-        <b-button variant="outline-danger" @click="deleteStar(star.starNo)"
-          >삭제</b-button
-        >
-      </div> -->
     </div>
   </b-card>
 </template>
@@ -112,7 +107,7 @@ export default {
     setStarno(starno) {
       console.log("setStarno->", starno);
       this.starno = starno;
-      console.log("setStarno->", starno);
+      console.log("setStarno->", this.starno);
     },
     /*
     마커 조회 method
@@ -157,9 +152,12 @@ export default {
     // input : aptCode (PK)
     // 22.11.18 장한결
     async showDetail(aptCode) {
-      console.log("showDetail -> detailHouse", this.star.starNo);
+      console.log("showDetail -> detailHouse", this.starno);
       // 아파트 상세정보 불러오기
-      await this.detailHouse(aptCode, this.starno);
+      let starno = this.starno;
+      let param = [aptCode, starno];
+      console.log("set param is : ", param);
+      await this.detailHouse(param);
       console.log("상세 정보 불러옴 : ", this.houselist);
       // 거래내역 불러오기
       await this.getDealByAptcode(aptCode);

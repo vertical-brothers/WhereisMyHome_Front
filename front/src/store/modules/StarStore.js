@@ -1,5 +1,6 @@
 import { aptCodeList, houseNameList, searchByDongName } from "@/api/house.js";
 import { searchDealByAptcode } from "@/api/housedeal.js";
+import { deleteStarv2 } from "@/api/star";
 
 /*
 아파트 관련 통신 vuex
@@ -17,6 +18,7 @@ const StarStore = {
     houselist: [],
     // 아파트 거래내역
     deallist: [],
+    deleteApt: false,
   },
   mutations: {
     SET_DETAIL_HOUSE(state, house) {
@@ -109,6 +111,22 @@ const StarStore = {
         }
       );
     },
+
+    deleteStar: ({ commit }, starno) => {
+      deleteStarv2(
+        starno,
+        ({ data }) => {
+          commit("CLEAR_HOUSE");
+          console.log(data);
+          // this.$router.go(this.$router.currentRoute).catch(() => {});
+          this.$router.replace("home"); // home 에서 about 으로 대체
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    },
   },
 };
+
 export default StarStore;

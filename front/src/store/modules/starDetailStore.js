@@ -48,18 +48,23 @@ const aptDetailStore = {
     },
   },
   actions: {
-    /* 아파트 코드로 아파트 정보 가져오기 (비동기 호출)
+    /* 아파트 코드로 아파트 정보 가져오기 (비동기 호출) + 오버레이에 starNo 지정
     input : aptCode (PK)
     output : house object
     22.11.17 장한결
+
+    input : aptCode (PK), starno
+    output : house object
+    22.11.23 이인재
     */
-    async detailHouse({ commit }, aptCode, starno) {
-      commit("SET_STARNO", starno);
+    async detailHouse({ commit }, param) {
+      console.log("detailHouse aptcode ->", param[0], " starno ->", param[1]);
+      commit("SET_STARNO", param[1]);
       await aptCodeList(
-        aptCode,
+        param[0],
         ({ data }) => {
           commit("SET_DETAIL_HOUSE", data);
-          console.log(starno);
+          console.log(param[1]);
         },
         (error) => {
           console.log(error);

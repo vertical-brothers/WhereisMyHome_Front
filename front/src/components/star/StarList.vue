@@ -71,7 +71,7 @@ export default {
 
   computed: {
     ...mapState(memberStore, ["userInfo"]),
-    ...mapState(aptDetailStore, ["house", "isShow", "houselist", "deallist"]),
+    ...mapState(aptDetailStore, ["isShow", "houselist", "deallist"]),
   },
 
   methods: {

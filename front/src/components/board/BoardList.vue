@@ -37,7 +37,7 @@
                     id="btn-search"
                     class="btn btn-dark"
                     type="button"
-                    @click="moveWrite"
+                    @click="boardlist"
                   >
                     검색
                   </b-button>

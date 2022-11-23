@@ -4,7 +4,7 @@ const api = apiInstance();
 
 function listArticle(param, success, fail) {
   api
-    .get(`/board/?pgno=${param.pgno}&key=${param.key}&word=${param.word}`)
+    .get(`/board?pgno=${param.pgno}&key=${param.key}&word=${param.word}`)
     .then(success)
     .catch(fail);
 }

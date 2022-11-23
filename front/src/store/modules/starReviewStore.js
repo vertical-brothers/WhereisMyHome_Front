@@ -15,6 +15,7 @@ const aptReviewStore = {
     // 아파트 정보
     reviews: [],
     // 리뷰정보 디테일 위한 객체
+    aptCode: null,
     review: null,
     reviewModalShow: false,
     writeModalShow: false,
@@ -22,6 +23,9 @@ const aptReviewStore = {
     isDeleteError: false,
   },
   mutations: {
+    SET_APTCODE(state, aptCode) {
+      state.aptCode = aptCode;
+    },
     SET_REVIEWS(state, reviews) {
       state.reviews = reviews;
     },
@@ -70,6 +74,7 @@ output : review List
         aptCode,
         ({ data }) => {
           console.log(data);
+          commit("SET_APTCODE", aptCode);
           commit("SET_REVIEWS", data);
         },
         (error) => {

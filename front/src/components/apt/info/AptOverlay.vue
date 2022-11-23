@@ -1,8 +1,35 @@
 <template>
-  <div id="_overlay" class="col-12 d-flex justify-content-end">
+  <div id="_overlay" class="col d-flex justify-content-end">
     <review-modal></review-modal>
     <write-modal></write-modal>
-    <div class="col-md-9" @click="close"></div>
+    <div class="col-md-5" @click="close"></div>
+    <div
+      id="_overlayleftend"
+      class="col-md-5 d-flex flex-column mt-3"
+      @click="close"
+    >
+      <div class="row">
+        <div class="col">
+          <button
+            v-if="this.isMartShow"
+            type="button"
+            class="btn btn-primary"
+            @click="decideComfort('MT1')"
+          >
+            <b-icon icon="cart4"></b-icon> 마트
+          </button>
+          <button
+            v-else
+            type="button"
+            class="btn btn-light"
+            @click="decideComfort('MT1')"
+          >
+            <b-icon icon="cart4"></b-icon> 마트
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4" @click="close"></div>
     <div id="_overlayrightend" class="col-md-3 d-flex flex-column me-5 mt-3">
       <!-- 우측 오버레이 검색바 시작 -->
       <div id="_searchdiv" class="row mb-3 col-md-12">
@@ -186,12 +213,15 @@ export default {
   name: "AptOverlay",
   beforeMount() {
     if (this.markers) {
-      this.setMarkers(null);
+      this.setMarkers(this.markers, null);
       this.CLEAR_MARKER;
     }
     if (this.house) {
       this.CLEAR_HOUSE;
     }
+  },
+  mounted() {
+    //kakao.maps.event.addListener(this.map, "idle", this.searchPlaces);
   },
   data() {
     return {
@@ -208,7 +238,16 @@ export default {
         starNo: "",
         userId: "",
       },
-      isLogin: sessionStorage.getItem("access-token") == null ? false : true,
+      // <<<<<<< HEAD
+      //       isLogin: sessionStorage.getItem("access-token") == null ? false : true,
+      // =======
+      //       isMartShow: false,
+      //       comfortMarkers: [],
+      //       currCategory: "",
+      //       comfortImageSrc: "",
+      //       comfortImageSize: null,
+      //       comofrtImageOption: null,
+      // >>>>>>> b19c9156606592af76e02abd09aaddd001726b80
     }; /* global kakao */
   },
   components: {
@@ -258,7 +297,7 @@ export default {
     // 22.11.17 장한결
     async loadMarkers() {
       // 1. 마커 전부 제거
-      this.setMarkers(null);
+      this.setMarkers(this.markers, null);
       this.CLEAR_MARKER;
       this.CLEAR_HOUSE_LIST;
       console.log(
@@ -275,13 +314,13 @@ export default {
           // 마커생성
           this.createMarkers();
           // 마커 부착
-          this.setMarkers(this.map);
+          this.setMarkers(this.markers, this.map);
           this.CLEAR_SEARCH;
           // 검색 조건 동이름
         } else if (this.searchOption === "dongName") {
           await this.getHouseListByDongname(this.searchKeyword);
           this.createMarkers();
-          this.setMarkers(this.map);
+          this.setMarkers(this.markers, this.map);
           this.CLEAR_SEARCH;
         }
         if (this.houselist.length > 0) {
@@ -334,9 +373,9 @@ export default {
     // map객체에 마커 띄우는 함수
     // input : map object (null입력시 마커 삭제됨.)
     // 22.11.18 장한결
-    setMarkers(map) {
-      for (let i = 0; i < this.markers.length; i++) {
-        this.markers[i].setMap(map);
+    setMarkers(argmarkers, map) {
+      for (let i = 0; i < argmarkers.length; i++) {
+        argmarkers[i].setMap(map);
       }
     },
     // 카카오맵 마커 클릭시 우측 오버레이 시현 함수
@@ -426,6 +465,76 @@ export default {
         this.SET_IS_STAR_APARTMENT();
       } else {
         this.CLEAR_IS_STAR_APARTMENT();
+      }
+    },
+    decideComfort(category) {
+      this.comfortMarkerSize = new kakao.maps.Size(64, 69);
+      this.comfortMarkerOption = { offset: new kakao.maps.Point(27, 69) };
+      // 일단 마커들 다 지움
+      for (let i = 0; i < this.comfortMarkers.length; i++) {
+        this.setMarkers(this.comfortMarkers, null);
+      }
+      if (category === "MT1") {
+        // 같은 마커버튼이 한 번 더 눌린거라면
+        if (this.isMartShow) {
+          // 카테고리 비워버림
+          this.currCategory = "";
+          // OFF처리
+          this.isMartShow = false;
+          return;
+          // 아니라면
+        } else {
+          // 다른 마커들 모두 OFF 처리
+          // 마커이미지 마트로 교체
+          // 마트마커 ON
+          this.isMartShow = true;
+        }
+      }
+      for (let i = 0; i < this.comfortMarkers.length; i++) {
+        this.setMarkers(this.comfortMarkers, null);
+      }
+      this.comfortMarkerSet(category);
+    },
+    // 편의시설 마커생성
+    comfortMarkerSet(category) {
+      this.currCategory = category;
+      kakao.maps.event.addListener(this.map, "idle", this.searchPlaces);
+      this.searchPlaces();
+    },
+    // 카테고리 서치 RUN
+    searchPlaces() {
+      if (!this.currCategory) {
+        return;
+      }
+      console.log(this.currCategory);
+      let ps = new kakao.maps.services.Places(this.map);
+      ps.categorySearch(this.currCategory, this.placesSearchCB, {
+        useMapBounds: true,
+      });
+    },
+    // 카테고리 serach후 callback. 카카오 API참고
+    placesSearchCB(data, status, pagination) {
+      if (status === kakao.maps.services.Status.OK) {
+        console.log(pagination);
+        this.makeComfortMarker(data);
+      }
+    },
+    // 카테고리 서치 기반 마커생성
+    makeComfortMarker(places) {
+      for (let i = 0; i < this.comfortMarkers.length; i++) {
+        this.setMarkers(this.comfortMarkers, null);
+      }
+      this.comfortMarkers = [];
+      // 마커생성 / 지도표시.
+      for (let i = 0; i < places.length; i++) {
+        // 마커를 생성하고 지도에 표시합니다
+        console.log(places);
+        this.comfortMarkers.push(
+          new kakao.maps.Marker({
+            map: this.map,
+            position: new kakao.maps.LatLng(places[i].y, places[i].x),
+          })
+        );
       }
     },
   },

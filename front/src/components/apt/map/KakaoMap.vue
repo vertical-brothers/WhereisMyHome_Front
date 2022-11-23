@@ -120,7 +120,7 @@ export default {
       } else {
         const script = document.createElement("script");
         /* global kakao */
-        script.src = `//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=${KAKAO_MAP_KEY}`;
+        script.src = `//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=${KAKAO_MAP_KEY}&libraries=services`;
         script.addEventListener("load", () => {
           console.log("Initializing Map...");
           kakao.maps.load(this.initMap);
@@ -262,7 +262,13 @@ export default {
   },
 
   computed: {
-    ...mapState(mainStore, ["searchKeyword", "searchOption", "map", "markers"]),
+    ...mapState(mainStore, [
+      "searchKeyword",
+      "searchOption",
+      "map",
+      "markers",
+      "isMartShow",
+    ]),
     ...mapState(aptDetailStore, ["houselist", "isStarApartment"]),
   },
 };

@@ -84,7 +84,7 @@
         </b-navbar-nav>
         <!-- before login -->
         <b-navbar-nav class="ml-auto" v-else>
-          <b-nav-item-dropdown right>
+          <b-nav-item-dropdown left>
             <template #button-content>
               <b-icon icon="people" font-scale="2"></b-icon>
             </template>

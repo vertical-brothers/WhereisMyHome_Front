@@ -1,6 +1,6 @@
 import { aptCodeList, houseNameList, searchByDongName } from "@/api/house.js";
 import { searchDealByAptcode } from "@/api/housedeal.js";
-import { deleteStarv2 } from "@/api/star";
+import { deleteStarv2, listStar } from "@/api/star";
 
 /*
 아파트 관련 통신 vuex
@@ -49,6 +49,9 @@ const StarStore = {
       state.isDelete = true;
     },
     SET_STARS(state, data) {
+      state.stars = data;
+    },
+    setStar: function (state, data) {
       state.stars = data;
     },
   },
@@ -124,9 +127,11 @@ const StarStore = {
       await deleteStarv2(
         starno,
         ({ data }) => {
+          console.log(starno, data);
           commit("CLEAR_HOUSE");
           // commit("SET_ISDELETE");
           commit("SET_STARS", data.stars);
+          console.log("ddddd", data);
           console.log(data);
           // console.log(this.$store.state.stars);
           // this.$router.go(this.$router.currentRoute).catch(() => {});
@@ -139,20 +144,23 @@ const StarStore = {
       );
     },
 
-    // getStars: async ({ commit }) => {
-    //   await listStar(
-    //     sessionStorage.getItem("access-token"),
-    //     ({ data }) => {
-    //       console.log("관심지역 다시 가져오기 성공");
-    //       commit("SET_STARS", data);
-    //       this.$store.state.star = data;
-    //       // console.log(JSON.stringify(this.stars));
-    //     },
-    //     (error) => {
-    //       console.log(error);
-    //     }
-    //   );
-    // },
+    getStars: async ({ commit }) => {
+      await listStar(
+        sessionStorage.getItem("access-token"),
+        async ({ data }) => {
+          console.log("관심지역 다시 가져오기 성공");
+          await commit("SET_STARS", data);
+
+          console.log("ddd", this);
+
+          // this.$store.state.star = data;
+          // console.log(JSON.stringify(this.stars));
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    },
   },
 };
 

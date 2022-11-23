@@ -35,15 +35,14 @@
     <!--게시판 시작-->
     <div class="col-md-12 d-flex justify-content-center mt-4">
       <div class="row row-cols-3 col-md-10">
-        <div class="rounded">
-          <h4 class>게시판 1</h4>
-          <table class="table rounded">
-            <tr>
-              title
-            </tr>
-          </table>
+        <div class="rounded" id="board">
+          <img
+            style="object-fit: cover"
+            src="@/assets/apartImage.gif"
+            class="d-block w-90"
+          />
         </div>
-        <div>
+        <div id="board">
           <h4>게시판 2</h4>
           <table class="table rounded">
             <tr>
@@ -51,7 +50,7 @@
             </tr>
           </table>
         </div>
-        <div>
+        <div id="board">
           <h4>게시판 3</h4>
           <table class="table rounded">
             <tr>
@@ -124,5 +123,11 @@ li {
 }
 a {
   color: #42b983;
+}
+
+#board {
+  height: 80%;
+  border-radius: 10;
+  box-shadow: 5px 5px 5px grey;
 }
 </style>

@@ -33,8 +33,7 @@
 import StarItem from "@/components/star/StarItem.vue";
 import { listStar } from "@/api/star.js";
 import StarKakaoMap from "@/components/star/map/StarKakaoMap.vue";
-// import StarStore from "@/store/modules/StarStore.js";
-import { mapActions, mapState } from "vuex";
+import { mapActions, mapMutations, mapState } from "vuex";
 import StarOverlay from "@/components/star/StarOverlay.vue";
 const aptDetailStore = "aptDetailStore";
 const memberStore = "memberStore";
@@ -54,10 +53,11 @@ export default {
     console.log("test");
     listStar(
       sessionStorage.getItem("access-token"),
-      ({ data }) => {
+      async ({ data }) => {
         console.log("관심지역 가져오기 성공");
-        this.$store.state.stars = data;
-        console.log(data, "의 배열로", this.$store.state.stars);
+        // console.log(data, "의 배열로", this.getStarList);
+        await this.SET_STARS(data);
+        console.log(data, "의 배열로", this.getStarList);
       },
       (error) => {
         console.log(error);
@@ -68,9 +68,8 @@ export default {
     this.house = null;
   },
   watch: {
-    getStarList(val) {
+    getStarList() {
       console.log("watch");
-      console.log(val);
     },
   },
 
@@ -91,6 +90,7 @@ export default {
       "getHouseListByDongname",
       "getDealByAptcode",
     ]),
+    ...mapMutations(StarStore, ["SET_STARS"]),
   },
 };
 </script>

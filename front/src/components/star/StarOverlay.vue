@@ -26,7 +26,7 @@
                 <td class="col-2">
                   <!--아파트 관심추가 버튼-->
                   <button
-                    @click="deleteStar(starno), getStars(), close()"
+                    @click="deleteStar(starno), close()"
                     class="btn btn-primary"
                     type="button"
                   >

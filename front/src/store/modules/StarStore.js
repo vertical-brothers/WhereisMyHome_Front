@@ -1,6 +1,6 @@
 import { aptCodeList, houseNameList, searchByDongName } from "@/api/house.js";
 import { searchDealByAptcode } from "@/api/housedeal.js";
-import { deleteStarv2 } from "@/api/star";
+import { deleteStarv2, listStar } from "@/api/star";
 
 /*
 아파트 관련 통신 vuex
@@ -10,6 +10,7 @@ import { deleteStarv2 } from "@/api/star";
 const StarStore = {
   namespaced: true,
   state: {
+    stars: [],
     // 아파트 정보
     house: null,
     // 아파트 상세정보창 띄울지 여부
@@ -19,6 +20,7 @@ const StarStore = {
     // 아파트 거래내역
     deallist: [],
     deleteApt: false,
+    isDelete: false,
   },
   mutations: {
     SET_DETAIL_HOUSE(state, house) {
@@ -42,6 +44,12 @@ const StarStore = {
     },
     CLEAR_DEAL_LIST(state) {
       state.deallist = [];
+    },
+    SET_ISDELETE(state) {
+      state.isDelete = true;
+    },
+    SET_STARS(state, data) {
+      state.stars = data;
     },
   },
   actions: {
@@ -117,9 +125,28 @@ const StarStore = {
         starno,
         ({ data }) => {
           commit("CLEAR_HOUSE");
+          commit("SET_ISDELETE");
+          commit("SET_STARS", data);
           console.log(data);
+          // console.log(this.$store.state.stars);
           // this.$router.go(this.$router.currentRoute).catch(() => {});
-          this.$router.replace("home"); // home 에서 about 으로 대체
+          // this.$router.replace("home"); // home 에서 about 으로 대체
+          // state.isDelete = true;
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    },
+
+    getStars: async ({ commit }) => {
+      await listStar(
+        sessionStorage.getItem("access-token"),
+        ({ data }) => {
+          console.log("관심지역 다시 가져오기 성공");
+          commit("SET_STARS", data);
+          this.$store.state.star = data;
+          // console.log(JSON.stringify(this.stars));
         },
         (error) => {
           console.log(error);

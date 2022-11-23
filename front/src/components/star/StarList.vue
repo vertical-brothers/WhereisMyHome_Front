@@ -11,7 +11,7 @@
           <!-- <h4 class>관심지역 목록</h4> -->
           <table class="table rounded">
             <star-item
-              v-for="(star, index) in stars"
+              v-for="(star, index) in $store.state.stars"
               :key="index"
               :star="star"
               :index="index"
@@ -33,13 +33,12 @@
 import StarItem from "@/components/star/StarItem.vue";
 import { listStar } from "@/api/star.js";
 import StarKakaoMap from "@/components/star/map/StarKakaoMap.vue";
-import StarStore from "@/store/modules/StarStore.js";
-
+// import StarStore from "@/store/modules/StarStore.js";
 import { mapActions, mapState } from "vuex";
 import StarOverlay from "@/components/star/StarOverlay.vue";
 const aptDetailStore = "aptDetailStore";
-
 const memberStore = "memberStore";
+const StarStore = "StarStore";
 
 export default {
   name: "StarList",
@@ -47,7 +46,7 @@ export default {
 
   data() {
     return {
-      stars: [],
+      // stars: [],
       // acesstoken: sessionStorage.getItem("access-token"),
     };
   },
@@ -57,8 +56,8 @@ export default {
       sessionStorage.getItem("access-token"),
       ({ data }) => {
         console.log("관심지역 가져오기 성공");
-        this.stars = data;
-        console.log(JSON.stringify(this.stars));
+        this.$store.state.stars = data;
+        console.log(data, "의 배열로", this.$store.state.stars);
       },
       (error) => {
         console.log(error);
@@ -68,14 +67,17 @@ export default {
   beforeCreate() {
     this.house = null;
   },
+  watch: {},
 
   computed: {
     ...mapState(memberStore, ["userInfo"]),
     ...mapState(aptDetailStore, ["isShow", "houselist", "deallist"]),
+    ...mapState(StarStore, ["stars"]),
   },
 
   methods: {
     ...mapActions(StarStore, [
+      "isDelete",
       "detailHouse",
       "getHouseListByAptname",
       "getHouseListByDongname",

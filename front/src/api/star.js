@@ -2,10 +2,10 @@ import { tokenInstance } from "@/api/index.js";
 import { API_BASE_URL } from "@/config";
 import axios from "axios";
 
-function listStar(token, success, fail) {
+async function listStar(token, success, fail) {
   const api = tokenInstance(token);
   console.log("관심지역 리스트를 불러옵니다.");
-  api.get(`/star`).then(success).catch(fail);
+  await api.get(`/star`).then(success).catch(fail);
 }
 
 function deleteStar(starno, token, success, fail) {
@@ -58,9 +58,9 @@ async function writeStarApi(star, token, success, fail) {
 //     });
 // }
 
-function deleteStarv2(starno, success, fail) {
+async function deleteStarv2(starno, success, fail) {
   let token = sessionStorage.getItem("access-token");
-  axios
+  await axios
     .create({
       baseURL: API_BASE_URL,
       headers: {

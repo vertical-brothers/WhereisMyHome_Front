@@ -26,15 +26,11 @@
                 <td class="col-2">
                   <!--아파트 관심추가 버튼-->
                   <button
-                    @click="close(), deleteStar(starno)"
+                    @click="deleteStar(starno), getStars(), close()"
                     class="btn btn-primary"
                     type="button"
                   >
-                    <b-icon
-                      v-if="this.isStarApartment"
-                      icon="star-fill"
-                    ></b-icon>
-                    <b-icon v-else icon="star"></b-icon>
+                    <b-icon icon="star-fill"></b-icon>
                   </button>
                 </td>
               </tr>
@@ -146,11 +142,11 @@
 </template>
 <script>
 import { mapState, mapMutations, mapActions } from "vuex";
-import { checkStar, writeStarApi, deleteStar } from "@/api/star.js";
+import { checkStar } from "@/api/star.js";
 import ReviewModal from "@/components/apt/info/ReviewModal.vue";
 import WriteModal from "@/components/apt/info/WriteModal.vue";
-import axios from "axios";
-import { API_BASE_URL } from "@/config";
+// import axios from "axios";
+// import { API_BASE_URL } from "@/config";
 const starDetailStore = "starDetailStore";
 const mainStore = "mainStore";
 const starReviewStore = "starReviewStore";
@@ -215,7 +211,7 @@ export default {
       "SET_IS_STAR_APARTMENT",
       "CLEAR_IS_STAR_APARTMENT",
     ]),
-    ...mapActions(StarStore["deleteStar"]),
+    ...mapActions(StarStore, ["deleteStar", "getStars"]),
     likeApt() {},
     close() {
       this.CLEAR_HOUSE();
@@ -287,86 +283,86 @@ export default {
     writeReview() {
       this.SET_WRITE_MODAL_SHOW();
     },
-    setStar() {
-      if (this.isStarApartment) {
-        console.log("함수진입");
-        console.log(this.starno);
-        deleteStar(
-          this.starno,
-          sessionStorage.getItem("access-token"),
-          ({ data }) => {
-            if (data.message === "success") {
-              console.log("관심지역 삭제 성공");
-            } else {
-              console.log("관심지역 삭제 실패!");
-            }
-            this.star.apartmentName = "";
-            this.star.aptCode = "";
-            this.star.dong = "";
-            this.star.lat = "";
-            this.star.lng = "";
-            this.star.roadName = "";
-            this.star.starNo = "";
-            this.star.userId = "";
-            // this.isStarApartment = false;
-            this.close();
-          },
-          (error) => {
-            console.log(error);
-          }
-        );
-      } else {
-        this.star.apartmentName = this.house.apartmentName;
-        this.star.aptCode = this.house.aptCode;
-        this.star.dong = this.house.dong;
-        this.star.lat = this.house.lat;
-        this.star.lng = this.house.lng;
-        this.star.roadName = this.house.roadName;
-        writeStarApi(
-          this.star,
-          sessionStorage.getItem("access-token"),
-          ({ data }) => {
-            if (data.message === "success") {
-              console.log("관심지역 입력 성공");
-              console.log("들어온 pk : ", data.starNo);
-              this.star.starNo = data.starNo;
-            } else {
-              console.log("관심지역 입력 실패!");
-            }
-          },
-          (error) => {
-            console.log(error);
-          }
-        );
-      }
-      if (!this.isStarApartment) {
-        this.SET_IS_STAR_APARTMENT();
-      } else {
-        this.CLEAR_IS_STAR_APARTMENT();
-      }
-    },
-    async deleteStar(starno) {
-      let token = sessionStorage.getItem("access-token");
-      console.log(this.star.starNo + " " + starno);
-      await axios
-        .create({
-          baseURL: API_BASE_URL,
-          headers: {
-            "Content-type": "application/json",
-            "access-token": token,
-          },
-        })
-        .delete(`/star/${starno}`)
-        .then(({ data }) => {
-          console.log(data.message);
-          this.CLEAR_HOUSE();
-          // this.$router.go(this.$router.current);
-          this.$router.push(`/star/list`);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    },
+    // setStar() {
+    //   if (this.isStarApartment) {
+    //     console.log("함수진입");
+    //     console.log(this.starno);
+    //     deleteStar(
+    //       this.starno,
+    //       sessionStorage.getItem("access-token"),
+    //       ({ data }) => {
+    //         if (data.message === "success") {
+    //           console.log("관심지역 삭제 성공");
+    //         } else {
+    //           console.log("관심지역 삭제 실패!");
+    //         }
+    //         this.star.apartmentName = "";
+    //         this.star.aptCode = "";
+    //         this.star.dong = "";
+    //         this.star.lat = "";
+    //         this.star.lng = "";
+    //         this.star.roadName = "";
+    //         this.star.starNo = "";
+    //         this.star.userId = "";
+    //         // this.isStarApartment = false;
+    //         this.close();
+    //       },
+    //       (error) => {
+    //         console.log(error);
+    //       }
+    //     );
+    //   } else {
+    //     this.star.apartmentName = this.house.apartmentName;
+    //     this.star.aptCode = this.house.aptCode;
+    //     this.star.dong = this.house.dong;
+    //     this.star.lat = this.house.lat;
+    //     this.star.lng = this.house.lng;
+    //     this.star.roadName = this.house.roadName;
+    //     writeStarApi(
+    //       this.star,
+    //       sessionStorage.getItem("access-token"),
+    //       ({ data }) => {
+    //         if (data.message === "success") {
+    //           console.log("관심지역 입력 성공");
+    //           console.log("들어온 pk : ", data.starNo);
+    //           this.star.starNo = data.starNo;
+    //         } else {
+    //           console.log("관심지역 입력 실패!");
+    //         }
+    //       },
+    //       (error) => {
+    //         console.log(error);
+    //       }
+    //     );
+    //   }
+    //   if (!this.isStarApartment) {
+    //     this.SET_IS_STAR_APARTMENT();
+    //   } else {
+    //     this.CLEAR_IS_STAR_APARTMENT();
+    //   }
+    // },
+    // async deleteStar(starno) {
+    //   let token = sessionStorage.getItem("access-token");
+    //   console.log(this.star.starNo + " " + starno);
+    //   await axios
+    //     .create({
+    //       baseURL: API_BASE_URL,
+    //       headers: {
+    //         "Content-type": "application/json",
+    //         "access-token": token,
+    //       },
+    //     })
+    //     .delete(`/star/${starno}`)
+    //     .then(({ data }) => {
+    //       console.log(data.message);
+    //       this.CLEAR_HOUSE();
+    //       // this.$router.go(this.$router.current);
+    //       this.$router.push(`/star/list`);
+    //     })
+    //     .catch((error) => {
+    //       console.log(error);
+    //     });
+    // },
   },
   computed: {
     ...mapState(starDetailStore, [

@@ -2,59 +2,40 @@
   <!--검색 carousel 시작 -->
   <div id="carouselExampleCaptions" class="carousel" data-bs-ride="carousel">
     <div class="carousel-inner" style="background-color: rgb(54, 54, 54)">
-      <div class="carousel-item active">
-        <img
-          style="object-fit: cover"
-          src="@/assets/home_apartment.jpg"
-          class="d-block w-100"
-          height="400"
-        />
-        <div class="carousel-caption d-flex flex-column align-items-center">
-          <div class="display-1 mb-3">Happy House</div>
-        </div>
-      </div>
+      <div class="carousel-item active"></div>
     </div>
     <!--검색 carousel 끝 -->
     <!--게시판 시작-->
-    <div class="col-md-12 d-flex justify-content-center mt-4">
-      <div class="row row-cols-3 col-md-10">
-        <div class="rounded">
+    <div class="col-md-12 justify-content-center mt-4">
+      <div class="row row-cols-5 col-md-10">
+        <div class="rounded" id="totalUser">
           <h4 class>게시판 1</h4>
-          <table class="table rounded">
-            <tr>
-              title
-            </tr>
-          </table>
+          <admin-total-user />
         </div>
-        <div>
+        <div class="rounded" id="totalUser">
           <h4>게시판 2</h4>
-          <table class="table rounded">
-            <tr>
-              title
-            </tr>
-          </table>
+          <admin-total-login />
         </div>
-        <div>
+        <div class="rounded" id="totalUser">
           <h4>게시판 3</h4>
-          <table class="table rounded">
-            <tr>
-              title
-            </tr>
-          </table>
+          <admin-login-time />
         </div>
       </div>
+      <div class="row row-cols-5 col-md-10">차트넣을 공간</div>
     </div>
     <!--게시판 끝-->
+    <!--그래프 두개 들어갈 칸-->
   </div>
 </template>
 
 <script>
 import AdminTotalUser from "./sub/AdminTotalUser.vue";
+import AdminTotalLogin from "./sub/AdminTotalLogin.vue";
+import AdminLoginTime from "./sub/AdminLoginTime.vue";
 export default {
+  components: { AdminTotalUser, AdminTotalLogin, AdminLoginTime },
   name: "AdminHome",
-  comments: {
-    AdminTotalUser,
-  },
+
   data() {
     return {
       thumbNail: require("@/assets/home_apartment.jpg"),
@@ -87,5 +68,8 @@ li {
 }
 a {
   color: #42b983;
+}
+#totalUser {
+  /* width: 20%; */
 }
 </style>

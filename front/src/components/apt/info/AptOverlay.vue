@@ -81,7 +81,7 @@
                 <td class="col-2">
                   <!--아파트 관심추가 버튼-->
                   <button
-                    v-if="isLogin == true"
+                    v-if="isLogin != true"
                     @click="setStar"
                     class="btn btn-primary"
                     type="button"

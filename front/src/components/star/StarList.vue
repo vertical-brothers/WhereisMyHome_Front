@@ -11,7 +11,7 @@
           <!-- <h4 class>관심지역 목록</h4> -->
           <table class="table rounded">
             <star-item
-              v-for="(star, index) in $store.state.stars"
+              v-for="(star, index) in getStarList"
               :key="index"
               :star="star"
               :index="index"
@@ -67,12 +67,20 @@ export default {
   beforeCreate() {
     this.house = null;
   },
-  watch: {},
+  watch: {
+    getStarList(val) {
+      console.log("watch");
+      console.log(val);
+    },
+  },
 
   computed: {
     ...mapState(memberStore, ["userInfo"]),
     ...mapState(aptDetailStore, ["isShow", "houselist", "deallist"]),
     ...mapState(StarStore, ["stars"]),
+    getStarList() {
+      return this.stars;
+    },
   },
 
   methods: {

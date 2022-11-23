@@ -9,6 +9,10 @@ function searchApartmentReviewByAptcode(aptcode, success, fail) {
   api.get(`/aptreview/aptcode/${aptcode}`).then(success).catch(fail);
 }
 
+function searchRecentReview(limit, success, fail) {
+  api.get(`/aptreview/recent/${limit}`).then(success).catch(fail);
+}
+
 async function writeReviewApi(review, success, fail) {
   await axios
     .post(
@@ -50,4 +54,5 @@ export {
   writeReviewApi,
   updateReviewApi,
   deleteReviewApi,
+  searchRecentReview,
 };

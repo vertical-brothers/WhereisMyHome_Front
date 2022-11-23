@@ -43,20 +43,41 @@
           />
         </div>
         <div id="board">
-          <h4>게시판 2</h4>
-          <table class="table rounded">
-            <tr>
-              title
-            </tr>
-          </table>
+          <h4 class="md-3">공지사항</h4>
+          <b-table-simple striped hover small caption-top responsive>
+            <colgroup>
+              <col style="width: 50%" />
+              <col style="width: 25%" />
+              <col style="width: 25%" />
+            </colgroup>
+            <b-thead>
+              <b-tr class="text-center">
+                <b-th scope="col">제목</b-th>
+                <b-th scope="col">작성자</b-th>
+                <b-th scope="col">작성일</b-th>
+              </b-tr>
+            </b-thead>
+            <b-tbody>
+              <article-item
+                v-for="(article, index) in articles"
+                :key="index"
+                :article="article"
+                :index="index"
+              ></article-item>
+            </b-tbody>
+          </b-table-simple>
         </div>
-        <div id="board">
-          <h4>게시판 3</h4>
-          <table class="table rounded">
-            <tr>
-              title
-            </tr>
-          </table>
+        <div id="board" style="overflow: scroll">
+          <h4>최근 리뷰</h4>
+          <div>
+            <review-card
+              v-for="(review, index) in reviews"
+              :key="index"
+              :review="review"
+              :index="index"
+              class="mb-3 border border-dark"
+            ></review-card>
+          </div>
         </div>
       </div>
     </div>
@@ -67,14 +88,49 @@
 <script>
 // import { aptCodeList, dongCodeList, apartmentNameList } from "@/api/house";
 import { mapMutations, mapState } from "vuex";
+import { listArticle } from "@/api/board.js";
+import { searchRecentReview } from "@/api/apartmentReview.js";
+import ArticleItem from "@/components/board/ArticleItemForMain.vue";
+import ReviewCard from "@/components/apt/review/apartmentReviewCard.vue";
 const mainStore = "mainStore";
 export default {
   name: "MainHome",
+  components: {
+    ArticleItem,
+    ReviewCard,
+  },
+  created() {
+    let param = {
+      pgno: 1,
+      spp: 10,
+      key: "",
+      word: "",
+    };
+    listArticle(
+      param,
+      (response) => {
+        this.articles = response.data;
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+    searchRecentReview(
+      10,
+      (response) => {
+        this.reviews = response.data;
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  },
   data() {
     return {
       thumbNail: require("@/assets/home_apartment.jpg"),
       keyword: "",
-
+      articles: [],
+      reviews: [],
       selected: null,
       options: [
         { value: null, text: "검색 조건" },

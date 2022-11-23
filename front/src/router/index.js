@@ -5,6 +5,7 @@ import BoardView from "@/views/BoardView.vue";
 import UserView from "@/views/UserView.vue";
 import AptView from "@/views/AptView.vue";
 import StarView from "@/views/StarView.vue";
+import AdminView from "@/views/AdminView";
 
 import MainHome from "@/components/home/MainHome.vue";
 import BoardList from "@/components/board/BoardList.vue";
@@ -124,6 +125,11 @@ const routes = [
         component: StarList,
       },
     ],
+  },
+  {
+    path: "/admin",
+    name: "admin",
+    component: AdminView,
   },
 ];
 

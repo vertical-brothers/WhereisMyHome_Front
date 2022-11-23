@@ -205,6 +205,7 @@ import { mapState, mapMutations, mapActions } from "vuex";
 import { checkStar, writeStarApi, deleteStar } from "@/api/star.js";
 import ReviewModal from "@/components/apt/info/ReviewModal.vue";
 import WriteModal from "@/components/apt/info/WriteModal.vue";
+import { addLog } from "@/api/log.js";
 const aptDetailStore = "aptDetailStore";
 const mainStore = "mainStore";
 const aptReviewStore = "aptReviewStore";
@@ -350,6 +351,17 @@ export default {
         // 클릭시 화면 우측 오버레이 생성 이벤트 부착
         // 그 후 지도 중심 이동
         kakao.maps.event.addListener(this.markerLocal[i], "click", () => {
+          console.log("add log start");
+          addLog(
+            h.aptCode,
+            ({ data }) => {
+              console.log("로그 추가", data);
+              console.log("add log");
+            },
+            (error) => {
+              console.log(error);
+            }
+          );
           this.showDetail(h.aptCode);
           this.mapCenterMove(h.lat, h.lng, 3);
         });

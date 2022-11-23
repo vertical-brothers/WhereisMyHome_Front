@@ -24,14 +24,6 @@ export default {
     // const script = document.createElement(script);
     //console.log(this.searchKeyword);
     this.loadMap();
-    this.loadMarkers();
-    if (this.houselist.length > 0) {
-      this.mapCenterMove(
-        this.houselist[0].lat,
-        this.houselist[0].lng,
-        this.zoomLevel
-      );
-    }
   },
 
   created() {
@@ -88,7 +80,7 @@ export default {
       } else {
         const script = document.createElement("script");
         /* global kakao */
-        script.src = `//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=${KAKAO_MAP_KEY}`;
+        script.src = `//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=${KAKAO_MAP_KEY}&libraries=services`;
         script.addEventListener("load", () => {
           console.log("Initializing Map...");
           kakao.maps.load(this.initMap);

@@ -10,7 +10,7 @@ const StarSubStore = {
     searchOption: "",
     aptList: [],
     map: null,
-    markers: [],
+    marker: null,
   },
   mutations: {
     SET_MAP(state, map) {
@@ -19,11 +19,11 @@ const StarSubStore = {
     CLEAR_MAP(state) {
       state.map = null;
     },
-    SET_MARKERS(state, markers) {
-      state.markers = markers;
+    SET_MARKER(state, marker) {
+      state.marker = marker;
     },
-    CLEAR_MARKERS(state) {
-      state.markers = [];
+    CLEAR_MARKER(state) {
+      state.marker = null;
     },
   },
 };

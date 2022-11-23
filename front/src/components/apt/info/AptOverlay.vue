@@ -10,10 +10,11 @@
     >
       <div class="row">
         <div class="col">
+          <!-- 마트버튼 -->
           <button
             v-if="this.isMartShow"
             type="button"
-            class="btn btn-primary"
+            class="btn btn-primary me-1"
             @click="decideComfort('MT1')"
           >
             <b-icon icon="cart4"></b-icon> 마트
@@ -21,11 +22,84 @@
           <button
             v-else
             type="button"
-            class="btn btn-light"
+            class="btn btn-light me-1"
             @click="decideComfort('MT1')"
           >
             <b-icon icon="cart4"></b-icon> 마트
           </button>
+          <!-- 마트버튼 -->
+          <!-- 유치원버튼 -->
+          <button
+            v-if="this.isKinderShow"
+            type="button"
+            class="btn btn-primary me-1"
+            @click="decideComfort('PS3')"
+          >
+            <b-icon icon="emoji-smile"></b-icon> 어린이집
+          </button>
+          <button
+            v-else
+            type="button"
+            class="btn btn-light me-1"
+            @click="decideComfort('PS3')"
+          >
+            <b-icon icon="emoji-smile"></b-icon> 어린이집
+          </button>
+          <!-- 유치원버튼 -->
+          <!-- 학교버튼 -->
+          <button
+            v-if="this.isSchoolShow"
+            type="button"
+            class="btn btn-primary me-1"
+            @click="decideComfort('SC4')"
+          >
+            <b-icon icon="award"></b-icon> 학교
+          </button>
+          <button
+            v-else
+            type="button"
+            class="btn btn-light me-1"
+            @click="decideComfort('SC4')"
+          >
+            <b-icon icon="award"></b-icon> 학교
+          </button>
+          <!-- 학교버튼 -->
+          <!-- 병원버튼 -->
+          <button
+            v-if="this.isHospitalShow"
+            type="button"
+            class="btn btn-primary me-1"
+            @click="decideComfort('HP8')"
+          >
+            <b-icon icon="plus-lg"></b-icon> 병원
+          </button>
+          <button
+            v-else
+            type="button"
+            class="btn btn-light me-1"
+            @click="decideComfort('HP8')"
+          >
+            <b-icon icon="plus-lg"></b-icon> 병원
+          </button>
+          <!-- 병원버튼 -->
+          <!-- 병원버튼 -->
+          <button
+            v-if="this.isPharmacyShow"
+            type="button"
+            class="btn btn-primary me-1"
+            @click="decideComfort('PM9')"
+          >
+            <b-icon icon="shop"></b-icon> 약국
+          </button>
+          <button
+            v-else
+            type="button"
+            class="btn btn-light me-1"
+            @click="decideComfort('PM9')"
+          >
+            <b-icon icon="shop"></b-icon> 약국
+          </button>
+          <!-- 병원버튼 -->
         </div>
       </div>
     </div>
@@ -81,7 +155,7 @@
                 <td class="col-2">
                   <!--아파트 관심추가 버튼-->
                   <button
-                    v-if="isLogin != true"
+                    v-if="isLogin"
                     @click="setStar"
                     class="btn btn-primary"
                     type="button"
@@ -117,6 +191,7 @@
             <div class="row">
               <h4 class="fw-bold col">리뷰</h4>
               <b-icon
+                v-if="isLogin"
                 @click="writeReview"
                 icon="pencil-square"
                 class="col-md-1 me-2 mt-1"
@@ -222,6 +297,13 @@ export default {
   },
   mounted() {
     //kakao.maps.event.addListener(this.map, "idle", this.searchPlaces);
+    console.log("call");
+    console.log("mounted check", sessionStorage.getItem("access-token"));
+    if (sessionStorage.getItem("access-token") === null) {
+      this.isLogin = false;
+    } else {
+      this.isLogin = true;
+    }
   },
   data() {
     return {
@@ -238,16 +320,17 @@ export default {
         starNo: "",
         userId: "",
       },
-      // <<<<<<< HEAD
-      //       isLogin: sessionStorage.getItem("access-token") == null ? false : true,
-      // =======
-      //       isMartShow: false,
-      //       comfortMarkers: [],
-      //       currCategory: "",
-      //       comfortImageSrc: "",
-      //       comfortImageSize: null,
-      //       comofrtImageOption: null,
-      // >>>>>>> b19c9156606592af76e02abd09aaddd001726b80
+      isLogin: false,
+      isMartShow: false,
+      isKinderShow: false,
+      isSchoolShow: false,
+      isHospitalShow: false,
+      isPharmacyShow: false,
+      comfortMarkers: [],
+      currCategory: "",
+      comfortImageSrc: null,
+      comfortImageSize: null,
+      comfortImageOption: null,
     }; /* global kakao */
   },
   components: {
@@ -388,6 +471,7 @@ export default {
       this.getDealByAptcode(aptCode);
       // 리뷰 불러오기
       this.getReviews(aptCode);
+      if (!this.isLogin) return; // 로그인 한 경우만 관심아파트 여부 조회.
       console.log("checkstar");
       this.CLEAR_IS_STAR_APARTMENT();
       console.log("isstar?", this.isStarApartment);
@@ -468,12 +552,13 @@ export default {
       }
     },
     decideComfort(category) {
-      this.comfortMarkerSize = new kakao.maps.Size(64, 69);
-      this.comfortMarkerOption = { offset: new kakao.maps.Point(27, 69) };
+      this.comfortImageSize = new kakao.maps.Size(20, 20);
+      //this.comfortImageOption = { offset: new kakao.maps.Point(27, 69) };
       // 일단 마커들 다 지움
       for (let i = 0; i < this.comfortMarkers.length; i++) {
         this.setMarkers(this.comfortMarkers, null);
       }
+      // 마트
       if (category === "MT1") {
         // 같은 마커버튼이 한 번 더 눌린거라면
         if (this.isMartShow) {
@@ -485,13 +570,99 @@ export default {
           // 아니라면
         } else {
           // 다른 마커들 모두 OFF 처리
-          // 마커이미지 마트로 교체
+          this.isHospitalShow = false;
+          this.isKinderShow = false;
+          this.isSchoolShow = false;
+          this.isPharmacyShow = false;
+          // 마커이미지 세팅
+          this.comfortImageSrc = require("@/assets/mapMarkers/cart-shopping-solid.svg");
           // 마트마커 ON
           this.isMartShow = true;
         }
-      }
-      for (let i = 0; i < this.comfortMarkers.length; i++) {
-        this.setMarkers(this.comfortMarkers, null);
+        // 어린이집
+      } else if (category === "PS3") {
+        // 같은 마커버튼이 한 번 더 눌린거라면
+        if (this.isKinderShow) {
+          // 카테고리 비워버림
+          this.currCategory = "";
+          // OFF처리
+          this.isKinderShow = false;
+          return;
+          // 아니라면
+        } else {
+          // 다른 마커들 모두 OFF 처리
+          this.isHospitalShow = false;
+          this.isMartShow = false;
+          this.isSchoolShow = false;
+          this.isPharmacyShow = false;
+          // 마커이미지 세팅
+          this.comfortImageSrc = require("@/assets/mapMarkers/cart-shopping-solid.svg");
+          // 마트마커 ON
+          this.isKinderShow = true;
+        }
+        // 학교
+      } else if (category === "SC4") {
+        // 같은 마커버튼이 한 번 더 눌린거라면
+        if (this.isSchoolShow) {
+          // 카테고리 비워버림
+          this.currCategory = "";
+          // OFF처리
+          this.isSchoolShow = false;
+          return;
+          // 아니라면
+        } else {
+          // 다른 마커들 모두 OFF 처리
+          this.isHospitalShow = false;
+          this.isKinderShow = false;
+          this.isMartShow = false;
+          this.isPharmacyShow = false;
+          // 마커이미지 세팅
+          this.comfortImageSrc = require("@/assets/mapMarkers/cart-shopping-solid.svg");
+          // 마트마커 ON
+          this.isSchoolShow = true;
+        }
+        // 병원
+      } else if (category === "HP8") {
+        // 같은 마커버튼이 한 번 더 눌린거라면
+        if (this.isHospitalShow) {
+          // 카테고리 비워버림
+          this.currCategory = "";
+          // OFF처리
+          this.isHospitalShow = false;
+          return;
+          // 아니라면
+        } else {
+          // 다른 마커들 모두 OFF 처리
+          this.isMartShow = false;
+          this.isKinderShow = false;
+          this.isSchoolShow = false;
+          this.isPharmacyShow = false;
+          // 마커이미지 세팅
+          this.comfortImageSrc = require("@/assets/mapMarkers/cart-shopping-solid.svg");
+          // 마트마커 ON
+          this.isHospitalShow = true;
+        }
+        // 약국
+      } else if (category === "PM9") {
+        // 같은 마커버튼이 한 번 더 눌린거라면
+        if (this.isPharmacyShow) {
+          // 카테고리 비워버림
+          this.currCategory = "";
+          // OFF처리
+          this.isPharmacyShow = false;
+          return;
+          // 아니라면
+        } else {
+          // 다른 마커들 모두 OFF 처리
+          this.isHospitalShow = false;
+          this.isKinderShow = false;
+          this.isSchoolShow = false;
+          this.isMartShow = false;
+          // 마커이미지 세팅
+          this.comfortImageSrc = require("@/assets/mapMarkers/cart-shopping-solid.svg");
+          // 마트마커 ON
+          this.isPharmacyShow = true;
+        }
       }
       this.comfortMarkerSet(category);
     },
@@ -515,7 +686,7 @@ export default {
     // 카테고리 serach후 callback. 카카오 API참고
     placesSearchCB(data, status, pagination) {
       if (status === kakao.maps.services.Status.OK) {
-        console.log(pagination);
+        pagination;
         this.makeComfortMarker(data);
       }
     },
@@ -526,13 +697,20 @@ export default {
       }
       this.comfortMarkers = [];
       // 마커생성 / 지도표시.
+      let markerImage = new kakao.maps.MarkerImage(
+        this.comfortImageSrc,
+        this.comfortImageSize,
+        this.comfortImageOption
+      );
+      //console.log(places);
       for (let i = 0; i < places.length; i++) {
         // 마커를 생성하고 지도에 표시합니다
-        console.log(places);
+
         this.comfortMarkers.push(
           new kakao.maps.Marker({
             map: this.map,
             position: new kakao.maps.LatLng(places[i].y, places[i].x),
+            image: markerImage,
           })
         );
       }
@@ -547,7 +725,7 @@ export default {
       "isStarApartment",
     ]),
     ...mapState(mainStore, ["map", "markers"]),
-    ...mapState(aptReviewStore, ["reviews", "reviewForceUpdate"]),
+    ...mapState(aptReviewStore, ["reviews"]),
   },
   filters: {
     roadNumberFilter(value) {

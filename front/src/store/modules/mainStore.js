@@ -29,6 +29,7 @@ const mainStore = {
     },
     SET_MARKERS(state, markers) {
       state.markers = markers;
+      console.log(state.markers);
     },
     CLEAR_MARKERS(state) {
       state.markers = [];

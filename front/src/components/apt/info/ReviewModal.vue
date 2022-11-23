@@ -57,7 +57,7 @@
       </div>
       <div class="row">
         <b-icon icon="person" scale="2" class="col-md-1 mt-2 ms-2"></b-icon>
-        <h4 class="col">아이디(세션꺼)</h4>
+        <h4 class="col">{{ review.userId }}</h4>
       </div>
       <div>
         <editor
@@ -84,7 +84,7 @@
     <!-- 글 수정 div 끝 -->
     <template #modal-footer>
       <b-button
-        v-if="isUpdate"
+        v-if="isLogin && isMyPost(review.userId) && isUpdate"
         size="sm"
         variant="primary"
         @click="updateReviewRun"
@@ -93,14 +93,19 @@
       </b-button>
       <!-- Emulate built in modal footer ok and cancel button actions -->
       <b-button
-        v-if="!isUpdate"
+        v-if="isLogin && isMyPost(review.userId) && !isUpdate"
         size="sm"
         variant="success"
         @click="updateFlip"
       >
         수정
       </b-button>
-      <b-button size="sm" variant="danger" @click="deleteReviewRun">
+      <b-button
+        v-if="isLogin && isMyPost(review.userId)"
+        size="sm"
+        variant="danger"
+        @click="deleteReviewRun"
+      >
         삭제
       </b-button>
       <!-- Button with custom close trigger value -->
@@ -115,6 +120,7 @@ import { mapState, mapMutations, mapActions } from "vuex";
 import { TINY_MCE_KEY } from "@/config";
 import Editor from "@tinymce/tinymce-vue";
 const aptReviewStore = "aptReviewStore";
+const memberStore = "memberStore";
 export default {
   name: "ReviewModal",
   data() {
@@ -127,12 +133,14 @@ export default {
         content: "",
         star1: 1,
       },
+      isLogin: sessionStorage.getItem("access-token") == null ? false : true,
       isUpdate: false,
     };
   },
   components: { editor: Editor },
   computed: {
     ...mapState(aptReviewStore, ["reviewModalShow", "review"]),
+    ...mapState(memberStore, ["userInfo"]),
     modalShow: {
       get() {
         return this.reviewModalShow;
@@ -192,6 +200,13 @@ export default {
       this.reviewBeforeupdate.star1 = this.review.star1;
       this.isUpdate = false;
       this.tinyId += 1;
+    },
+    isMyPost(userIdOfPost) {
+      if (this.isLogin) {
+        return userIdOfPost === this.userInfo.userId;
+      } else {
+        return false;
+      }
     },
   },
 };

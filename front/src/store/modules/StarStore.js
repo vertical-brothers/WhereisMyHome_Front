@@ -1,6 +1,6 @@
 import { aptCodeList, houseNameList, searchByDongName } from "@/api/house.js";
 import { searchDealByAptcode } from "@/api/housedeal.js";
-import { deleteStarv2 } from "@/api/star";
+import { deleteStarv2, listStar } from "@/api/star";
 
 /*
 아파트 관련 통신 vuex
@@ -120,7 +120,7 @@ const StarStore = {
       );
     },
 
-    deleteStar: async ({ commit }, starno) => {
+    async deleteStar({ commit }, starno) {
       await deleteStarv2(
         starno,
         ({ data }) => {
@@ -139,20 +139,20 @@ const StarStore = {
       );
     },
 
-    // getStars: async ({ commit }) => {
-    //   await listStar(
-    //     sessionStorage.getItem("access-token"),
-    //     ({ data }) => {
-    //       console.log("관심지역 다시 가져오기 성공");
-    //       commit("SET_STARS", data);
-    //       this.$store.state.star = data;
-    //       // console.log(JSON.stringify(this.stars));
-    //     },
-    //     (error) => {
-    //       console.log(error);
-    //     }
-    //   );
-    // },
+    async getStars({ commit }) {
+      await listStar(
+        sessionStorage.getItem("access-token"),
+        ({ data }) => {
+          console.log("관심지역 다시 가져오기 성공");
+          console.log(data);
+          commit("SET_STARS", data);
+          // console.log(JSON.stringify(this.stars));
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    },
   },
 };
 

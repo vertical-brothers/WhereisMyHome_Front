@@ -28,7 +28,7 @@
     </div>
     <div class="row">
       <b-icon icon="person" scale="2" class="col-md-1 mt-2 ms-2"></b-icon>
-      <h4 class="col">아이디(세션꺼)</h4>
+      <h4 class="col">{{ this.review.userId }}</h4>
     </div>
     <div>
       <editor
@@ -59,6 +59,7 @@ import { TINY_MCE_KEY } from "@/config";
 import Editor from "@tinymce/tinymce-vue";
 const aptReviewStore = "aptReviewStore";
 const aptDetailStore = "aptDetailStore";
+const memberStore = "memberStore";
 export default {
   name: "WriteModal",
   data() {
@@ -66,18 +67,20 @@ export default {
       tinymcekey: TINY_MCE_KEY,
       tinyId: 0,
       review: {
-        userId: "ssafy",
+        userId: "",
         subject: "",
         content: "",
         star1: 1,
         aptCode: "",
       },
+      isLogin: sessionStorage.getItem("access-token") == null ? false : true,
     };
   },
   components: { editor: Editor },
   computed: {
     ...mapState(aptReviewStore, ["writeModalShow"]),
     ...mapState(aptDetailStore, ["house"]),
+    ...mapState(memberStore, ["userInfo"]),
     modalShow: {
       get() {
         return this.writeModalShow;
@@ -110,12 +113,23 @@ export default {
       // send;
     },
     render() {
-      this.review.userId = "ssafy";
+      if (this.isLogin) {
+        this.review.userId = this.userInfo.userId;
+      } else {
+        this.review.userId = "";
+      }
       this.review.content = "";
       this.review.subject = "";
       this.review.star1 = "1";
       this.review.aptCode = "";
       this.tinyId += 1;
+    },
+    isMyPost(userIdOfPost) {
+      if (this.isLogin) {
+        return userIdOfPost === this.userInfo.userId;
+      } else {
+        return false;
+      }
     },
   },
 };

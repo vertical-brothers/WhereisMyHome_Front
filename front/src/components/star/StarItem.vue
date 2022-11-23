@@ -27,12 +27,11 @@
 import axios from "axios";
 import { API_BASE_URL } from "@/config/index";
 import { mapState, mapMutations, mapActions } from "vuex";
-import mainStore from "@/store/modules/mainStore";
 
 const StarStore = "StarStore";
 const StarSubStore = "StarSubStore";
 const starDetailStore = "starDetailStore";
-const starReviewStore = "starReviewStore";
+const starReviewStore = "aptReviewStore";
 export default {
   name: "StarItem",
   props: {
@@ -42,7 +41,7 @@ export default {
   },
   data() {
     return {
-      markerLocal: {},
+      markerLocal: null,
       coord: [],
       review: null,
 
@@ -73,8 +72,7 @@ export default {
       "SET_WRITE_MODAL_SHOW",
     ]),
     ...mapActions(starReviewStore, ["getReviews"]),
-    ...mapMutations(mainStore, ["SET_MARKERS"]),
-
+    ...mapMutations(StarSubStore, ["SET_MARKER", "CLEAR_MARKER"]),
     /*
     관심 지역 삭제 method
     2022-11-22  이인재
@@ -115,37 +113,27 @@ export default {
     */
     search(lat, lng, aptCode, e) {
       e.preventDefault;
-      // this.loadMarkers();
+      if (this.marker) {
+        this.marker.setMap(null);
+      }
+
       this.markerLocal = new kakao.maps.Marker({
         map: this.map,
         position: new kakao.maps.LatLng(lat, lng),
         clickable: true,
       });
+      this.SET_MARKER(this.markerLocal);
+      console.log(this.marker);
+      console.log(this.markerLocal);
       this.mapCenterMove(lat, lng, this.zoomLevel);
-
-      kakao.maps.event.addListener(this.markerLocal, "click", () => {
+      kakao.maps.event.addListener(this.marker, "click", () => {
         this.showDetail(aptCode);
         this.mapCenterMove(lat, lng, 3);
       });
     },
-    loadMarkers() {
-      this.setMarkers(null);
-      this.CLEAR_MARKER;
-      this.CLEAR_HOUSE_LIST;
-      // this.getHouseListByAptname(apt);
-      // 마커생성
-      this.createMarkers();
-      // 마커 부착
-      this.setMarkers(this.map);
-    },
     mapCenterMove(lat, lng, level) {
       this.map.setCenter(new kakao.maps.LatLng(lat, lng));
       this.map.setLevel(level, { anchor: new kakao.maps.LatLng(lat, lng) });
-    },
-    setMarkers(map) {
-      for (var i = 0; i < this.markers.length; i++) {
-        this.markers[i].setMap(map);
-      }
     },
 
     // 카카오맵 마커 클릭시 우측 오버레이 시현 함수
@@ -178,7 +166,7 @@ export default {
   created() {},
   computed: {
     ...mapState(StarStore, ["house", "ishow", "houselist", "deallist"]),
-    ...mapState(StarSubStore, ["map", "markers"]),
+    ...mapState(StarSubStore, ["map", "marker"]),
     ...mapState(starReviewStore, ["reviews", "reviewForceUpdate"]),
   },
   filters: {

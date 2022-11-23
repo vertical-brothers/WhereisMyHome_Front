@@ -11,7 +11,7 @@
           <!-- <h4 class>관심지역 목록</h4> -->
           <table class="table rounded">
             <star-item
-              v-for="(star, index) in getStarList"
+              v-for="(star, index) in this.stars"
               :key="index"
               :star="star"
               :index="index"
@@ -31,7 +31,6 @@
 </template>
 <script>
 import StarItem from "@/components/star/StarItem.vue";
-import { listStar } from "@/api/star.js";
 import StarKakaoMap from "@/components/star/map/StarKakaoMap.vue";
 // import StarStore from "@/store/modules/StarStore.js";
 import { mapActions, mapState } from "vuex";
@@ -52,17 +51,7 @@ export default {
   },
   created() {
     console.log("test");
-    listStar(
-      sessionStorage.getItem("access-token"),
-      ({ data }) => {
-        console.log("관심지역 가져오기 성공");
-        this.$store.state.stars = data;
-        console.log(data, "의 배열로", this.$store.state.stars);
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
+    this.getStars();
   },
   beforeCreate() {
     this.house = null;
@@ -73,7 +62,6 @@ export default {
       console.log(val);
     },
   },
-
   computed: {
     ...mapState(memberStore, ["userInfo"]),
     ...mapState(aptDetailStore, ["isShow", "houselist", "deallist"]),
@@ -90,6 +78,7 @@ export default {
       "getHouseListByAptname",
       "getHouseListByDongname",
       "getDealByAptcode",
+      "getStars",
     ]),
   },
 };

@@ -2,7 +2,107 @@
   <div id="_overlay" class="col-12 d-flex justify-content-end">
     <review-modal></review-modal>
     <write-modal></write-modal>
-    <!-- <div class="col-md-9" @click="close"></div> -->
+    <div
+      id="_overlayleftend"
+      class="col-md-6 d-flex flex-column mt-3"
+      @click="close"
+    >
+      <div class="row">
+        <div class="col">
+          <!-- 마트버튼 -->
+          <button
+            v-if="this.isMartShow"
+            type="button"
+            class="btn btn-primary me-1"
+            @click="decideComfort('MT1')"
+          >
+            <b-icon icon="cart4"></b-icon> 마트
+          </button>
+          <button
+            v-else
+            type="button"
+            class="btn btn-light me-1"
+            @click="decideComfort('MT1')"
+          >
+            <b-icon icon="cart4"></b-icon> 마트
+          </button>
+          <!-- 마트버튼 -->
+          <!-- 유치원버튼 -->
+          <button
+            v-if="this.isKinderShow"
+            type="button"
+            class="btn btn-primary me-1"
+            @click="decideComfort('PS3')"
+          >
+            <b-icon icon="emoji-smile"></b-icon> 어린이집
+          </button>
+          <button
+            v-else
+            type="button"
+            class="btn btn-light me-1"
+            @click="decideComfort('PS3')"
+          >
+            <b-icon icon="emoji-smile"></b-icon> 어린이집
+          </button>
+          <!-- 유치원버튼 -->
+          <!-- 학교버튼 -->
+          <button
+            v-if="this.isSchoolShow"
+            type="button"
+            class="btn btn-primary me-1"
+            @click="decideComfort('SC4')"
+          >
+            <b-icon icon="award"></b-icon> 학교
+          </button>
+          <button
+            v-else
+            type="button"
+            class="btn btn-light me-1"
+            @click="decideComfort('SC4')"
+          >
+            <b-icon icon="award"></b-icon> 학교
+          </button>
+          <!-- 학교버튼 -->
+          <!-- 병원버튼 -->
+          <button
+            v-if="this.isHospitalShow"
+            type="button"
+            class="btn btn-primary me-1"
+            @click="decideComfort('HP8')"
+          >
+            <b-icon icon="plus-lg"></b-icon> 병원
+          </button>
+          <button
+            v-else
+            type="button"
+            class="btn btn-light me-1"
+            @click="decideComfort('HP8')"
+          >
+            <b-icon icon="plus-lg"></b-icon> 병원
+          </button>
+          <!-- 병원버튼 -->
+          <!-- 병원버튼 -->
+          <button
+            v-if="this.isPharmacyShow"
+            type="button"
+            class="btn btn-primary me-1"
+            @click="decideComfort('PM9')"
+          >
+            <b-icon icon="shop"></b-icon> 약국
+          </button>
+          <button
+            v-else
+            type="button"
+            class="btn btn-light me-1"
+            @click="decideComfort('PM9')"
+          >
+            <b-icon icon="shop"></b-icon> 약국
+          </button>
+          <!-- 병원버튼 -->
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3" @click="close"></div>
     <div id="_overlayrightend" class="col-md-3 d-flex flex-column me-5 mt-3">
       <!-- 우측 오버레이 아파트정보칸 시작 -->
       <div
@@ -149,7 +249,7 @@ import WriteModal from "@/components/apt/info/WriteModal.vue";
 // import { API_BASE_URL } from "@/config";
 const starDetailStore = "starDetailStore";
 const mainStore = "mainStore";
-const starReviewStore = "starReviewStore";
+const starReviewStore = "aptReviewStore";
 const aptDetailStore = "aptDetailStore";
 const StarStore = "StarStore";
 
@@ -169,6 +269,17 @@ export default {
         starNo: "",
         userId: "",
       },
+      isLogin: false,
+      isMartShow: false,
+      isKinderShow: false,
+      isSchoolShow: false,
+      isHospitalShow: false,
+      isPharmacyShow: false,
+      comfortMarkers: [],
+      currCategory: "",
+      comfortImageSrc: null,
+      comfortImageSize: null,
+      comfortImageOption: null,
     }; /* global kakao */
   },
   components: {
@@ -258,6 +369,9 @@ export default {
       this.getDealByAptcode(aptCode);
       // 리뷰 불러오기
       this.getReviews(aptCode);
+
+      console.log(this.reviews);
+
       console.log("checkstar");
       this.CLEAR_IS_STAR_APARTMENT();
       console.log("isstar?", this.isStarApartment);
@@ -278,10 +392,181 @@ export default {
     },
     reviewDetail(review) {
       this.SET_REVIEW(review);
+      console.log(this.review);
       this.SET_REVIEW_MODAL_SHOW();
     },
     writeReview() {
       this.SET_WRITE_MODAL_SHOW();
+    },
+    decideComfort(category) {
+      this.comfortImageSize = new kakao.maps.Size(20, 20);
+      //this.comfortImageOption = { offset: new kakao.maps.Point(27, 69) };
+      // 일단 마커들 다 지움
+      for (let i = 0; i < this.comfortMarkers.length; i++) {
+        this.setMarkers(this.comfortMarkers, null);
+      }
+      // 마트
+      if (category === "MT1") {
+        // 같은 마커버튼이 한 번 더 눌린거라면
+        if (this.isMartShow) {
+          // 카테고리 비워버림
+          this.currCategory = "";
+          // OFF처리
+          this.isMartShow = false;
+          return;
+          // 아니라면
+        } else {
+          // 다른 마커들 모두 OFF 처리
+          this.isHospitalShow = false;
+          this.isKinderShow = false;
+          this.isSchoolShow = false;
+          this.isPharmacyShow = false;
+          // 마커이미지 세팅
+          this.comfortImageSrc = require("@/assets/mapMarkers/cart-shopping-solid.svg");
+          // 마트마커 ON
+          this.isMartShow = true;
+        }
+        // 어린이집
+      } else if (category === "PS3") {
+        // 같은 마커버튼이 한 번 더 눌린거라면
+        if (this.isKinderShow) {
+          // 카테고리 비워버림
+          this.currCategory = "";
+          // OFF처리
+          this.isKinderShow = false;
+          return;
+          // 아니라면
+        } else {
+          // 다른 마커들 모두 OFF 처리
+          this.isHospitalShow = false;
+          this.isMartShow = false;
+          this.isSchoolShow = false;
+          this.isPharmacyShow = false;
+          // 마커이미지 세팅
+          this.comfortImageSrc = require("@/assets/mapMarkers/cart-shopping-solid.svg");
+          // 마트마커 ON
+          this.isKinderShow = true;
+        }
+        // 학교
+      } else if (category === "SC4") {
+        // 같은 마커버튼이 한 번 더 눌린거라면
+        if (this.isSchoolShow) {
+          // 카테고리 비워버림
+          this.currCategory = "";
+          // OFF처리
+          this.isSchoolShow = false;
+          return;
+          // 아니라면
+        } else {
+          // 다른 마커들 모두 OFF 처리
+          this.isHospitalShow = false;
+          this.isKinderShow = false;
+          this.isMartShow = false;
+          this.isPharmacyShow = false;
+          // 마커이미지 세팅
+          this.comfortImageSrc = require("@/assets/mapMarkers/cart-shopping-solid.svg");
+          // 마트마커 ON
+          this.isSchoolShow = true;
+        }
+        // 병원
+      } else if (category === "HP8") {
+        // 같은 마커버튼이 한 번 더 눌린거라면
+        if (this.isHospitalShow) {
+          // 카테고리 비워버림
+          this.currCategory = "";
+          // OFF처리
+          this.isHospitalShow = false;
+          return;
+          // 아니라면
+        } else {
+          // 다른 마커들 모두 OFF 처리
+          this.isMartShow = false;
+          this.isKinderShow = false;
+          this.isSchoolShow = false;
+          this.isPharmacyShow = false;
+          // 마커이미지 세팅
+          this.comfortImageSrc = require("@/assets/mapMarkers/cart-shopping-solid.svg");
+          // 마트마커 ON
+          this.isHospitalShow = true;
+        }
+        // 약국
+      } else if (category === "PM9") {
+        // 같은 마커버튼이 한 번 더 눌린거라면
+        if (this.isPharmacyShow) {
+          // 카테고리 비워버림
+          this.currCategory = "";
+          // OFF처리
+          this.isPharmacyShow = false;
+          return;
+          // 아니라면
+        } else {
+          // 다른 마커들 모두 OFF 처리
+          this.isHospitalShow = false;
+          this.isKinderShow = false;
+          this.isSchoolShow = false;
+          this.isMartShow = false;
+          // 마커이미지 세팅
+          this.comfortImageSrc = require("@/assets/mapMarkers/cart-shopping-solid.svg");
+          // 마트마커 ON
+          this.isPharmacyShow = true;
+        }
+      }
+      this.comfortMarkerSet(category);
+    },
+    // 편의시설 마커생성
+    comfortMarkerSet(category) {
+      this.currCategory = category;
+      kakao.maps.event.addListener(this.map, "idle", this.searchPlaces);
+      this.searchPlaces();
+    },
+    // 카테고리 서치 RUN
+    searchPlaces() {
+      if (!this.currCategory) {
+        return;
+      }
+      console.log(this.currCategory);
+      let ps = new kakao.maps.services.Places(this.map);
+      ps.categorySearch(this.currCategory, this.placesSearchCB, {
+        useMapBounds: true,
+      });
+    },
+    // 카테고리 serach후 callback. 카카오 API참고
+    placesSearchCB(data, status, pagination) {
+      if (status === kakao.maps.services.Status.OK) {
+        console.log(pagination);
+        this.makeComfortMarker(data);
+      }
+    },
+    // 카테고리 서치 기반 마커생성
+    makeComfortMarker(places) {
+      for (let i = 0; i < this.comfortMarkers.length; i++) {
+        this.setMarkers(this.comfortMarkers, null);
+      }
+      this.comfortMarkers = [];
+      // 마커생성 / 지도표시.
+      let markerImage = new kakao.maps.MarkerImage(
+        this.comfortImageSrc,
+        this.comfortImageSize,
+        this.comfortImageOption
+      );
+      for (let i = 0; i < places.length; i++) {
+        // 마커를 생성하고 지도에 표시합니다
+        this.comfortMarkers.push(
+          new kakao.maps.Marker({
+            map: this.map,
+            position: new kakao.maps.LatLng(places[i].y, places[i].x),
+            image: markerImage,
+          })
+        );
+      }
+    },
+    // map객체에 마커 띄우는 함수
+    // input : map object (null입력시 마커 삭제됨.)
+    // 22.11.18 장한결
+    setMarkers(argmarkers, map) {
+      for (let i = 0; i < argmarkers.length; i++) {
+        argmarkers[i].setMap(map);
+      }
     },
     // setStar() {
     //   if (this.isStarApartment) {

@@ -49,8 +49,12 @@
 </template>
 
 <script>
+import AdminTotalUser from "./sub/AdminTotalUser.vue";
 export default {
   name: "AdminHome",
+  comments: {
+    AdminTotalUser,
+  },
   data() {
     return {
       thumbNail: require("@/assets/home_apartment.jpg"),

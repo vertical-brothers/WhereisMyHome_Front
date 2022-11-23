@@ -32,8 +32,7 @@
 <script>
 import StarItem from "@/components/star/StarItem.vue";
 import StarKakaoMap from "@/components/star/map/StarKakaoMap.vue";
-// import StarStore from "@/store/modules/StarStore.js";
-import { mapActions, mapState } from "vuex";
+import { mapActions, mapMutations, mapState } from "vuex";
 import StarOverlay from "@/components/star/StarOverlay.vue";
 const aptDetailStore = "aptDetailStore";
 const memberStore = "memberStore";
@@ -57,9 +56,8 @@ export default {
     this.house = null;
   },
   watch: {
-    getStarList(val) {
+    getStarList() {
       console.log("watch");
-      console.log(val);
     },
   },
   computed: {
@@ -80,6 +78,7 @@ export default {
       "getDealByAptcode",
       "getStars",
     ]),
+    ...mapMutations(StarStore, ["SET_STARS"]),
   },
 };
 </script>

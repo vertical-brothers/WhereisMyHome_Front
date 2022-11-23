@@ -11,23 +11,6 @@
         />
         <div class="carousel-caption d-flex flex-column align-items-center">
           <div class="display-1 mb-3">Happy House</div>
-          <div class="input-group w-75">
-            <b-form-select
-              class="form-select form-select-sm ms-10 me-1 w-5"
-              v-model="selected"
-              :options="options"
-            ></b-form-select>
-            <b-form-input
-              @keyup.enter="search"
-              type="text"
-              v-model="keyword"
-              class="form-control form-control-lg"
-              placeholder="원하시는 건물명 또는 동을 입력해주세요"
-            />
-            <button @click="search" class="btn btn-primary" type="button">
-              <b-icon icon="search" variant="info"></b-icon>
-            </button>
-          </div>
         </div>
       </div>
     </div>
@@ -35,14 +18,15 @@
     <!--게시판 시작-->
     <div class="col-md-12 d-flex justify-content-center mt-4">
       <div class="row row-cols-3 col-md-10">
-        <div class="rounded" id="board">
-          <img
-            style="object-fit: cover"
-            src="@/assets/apartImage.gif"
-            class="d-block w-90"
-          />
+        <div class="rounded">
+          <h4 class>게시판 1</h4>
+          <table class="table rounded">
+            <tr>
+              title
+            </tr>
+          </table>
         </div>
-        <div id="board">
+        <div>
           <h4>게시판 2</h4>
           <table class="table rounded">
             <tr>
@@ -50,7 +34,7 @@
             </tr>
           </table>
         </div>
-        <div id="board">
+        <div>
           <h4>게시판 3</h4>
           <table class="table rounded">
             <tr>
@@ -65,11 +49,8 @@
 </template>
 
 <script>
-// import { aptCodeList, dongCodeList, apartmentNameList } from "@/api/house";
-import { mapMutations, mapState } from "vuex";
-const mainStore = "mainStore";
 export default {
-  name: "MainHome",
+  name: "AdminHome",
   data() {
     return {
       thumbNail: require("@/assets/home_apartment.jpg"),
@@ -83,28 +64,7 @@ export default {
       ],
     };
   },
-  methods: {
-    ...mapMutations(mainStore, ["SET_SEARCH"]),
-    search() {
-      if (this.keyword == "") {
-        alert("검색어를 입력해주세요!");
-        return;
-      }
-      if (this.selected == null) {
-        alert("카테고리를 설정해주세요!");
-        return;
-      }
-
-      this.goSearch();
-    },
-    goSearch() {
-      this.SET_SEARCH([this.selected, this.keyword]);
-      this.$router.push({ name: "apt" });
-    },
-  },
-  computed: {
-    ...mapState(mainStore, ["searchKeyword", "searchOption"]),
-  },
+  methods: {},
 };
 </script>
 
@@ -123,11 +83,5 @@ li {
 }
 a {
   color: #42b983;
-}
-
-#board {
-  height: 80%;
-  border-radius: 10;
-  box-shadow: 5px 5px 5px grey;
 }
 </style>

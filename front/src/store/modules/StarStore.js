@@ -51,6 +51,9 @@ const StarStore = {
     SET_STARS(state, data) {
       state.stars = data;
     },
+    setStar: function (state, data) {
+      state.stars = data;
+    },
   },
   actions: {
     /* 아파트 코드로 아파트 정보 가져오기 (비동기 호출)
@@ -124,9 +127,11 @@ const StarStore = {
       await deleteStarv2(
         starno,
         ({ data }) => {
+          console.log(starno, data);
           commit("CLEAR_HOUSE");
           // commit("SET_ISDELETE");
           commit("SET_STARS", data.stars);
+          console.log("ddddd", data);
           console.log(data);
           // console.log(this.$store.state.stars);
           // this.$router.go(this.$router.currentRoute).catch(() => {});
@@ -146,6 +151,7 @@ const StarStore = {
           console.log("관심지역 다시 가져오기 성공");
           console.log(data);
           commit("SET_STARS", data);
+
           // console.log(JSON.stringify(this.stars));
         },
         (error) => {

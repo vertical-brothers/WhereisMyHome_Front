@@ -18,7 +18,7 @@
       </div>
 
       <p>
-        <b-form-rating v-model="review.star1" readonly></b-form-rating>
+        <!-- <b-form-rating v-model="review.star1" readonly></b-form-rating> -->
       </p>
       <button
         type="button"

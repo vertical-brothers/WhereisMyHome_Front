@@ -21,14 +21,21 @@
       </div>
 
       <div
-        class="row row-cols-3 col-md-13 justify-content-center"
+        class="row row-cols-3 col-md-12 justify-content-center"
         id="chartComponents"
       >
-        <div class="rounded border mx-5" id="graph">
+        <div class="col rounded border mx-5 col-md-4" id="graph">
           <admin-rank />
         </div>
-        <div class="rounded border mx-5" id="graph">
-          <admin-keyword />
+        <div class="col rounded mx-4 col-md-4" id="graph">
+          <div class="row row-cols-2 my-2 justify-content-center">
+            <div class="rounded border col-md-6">
+              <admin-all-keyword />
+            </div>
+            <div class="rounded border col-md-6">
+              <admin-daily-keyword />
+            </div>
+          </div>
         </div>
       </div>
       <!-- <div class="row row-cols-2 col-md-10">차트넣을 공간</div> -->
@@ -42,15 +49,18 @@
 import AdminTotalUser from "./sub/AdminTotalUser.vue";
 import AdminTotalLogin from "./sub/AdminTotalLogin.vue";
 import AdminLoginTime from "./sub/AdminLoginTime.vue";
-import AdminKeyword from "@/components/admin/sub/AdminKeyword.vue";
+import AdminAllKeyword from "@/components/admin/sub/AdminAllKeyword.vue";
+import AdminDailyKeyword from "@/components/admin/sub/AdminDailyKeyword.vue";
 import AdminRank from "@/components/admin/sub/AdminRank.vue";
+
 export default {
   components: {
     AdminTotalUser,
     AdminTotalLogin,
     AdminLoginTime,
     AdminRank,
-    AdminKeyword,
+    AdminAllKeyword,
+    AdminDailyKeyword,
   },
   name: "AdminHome",
 

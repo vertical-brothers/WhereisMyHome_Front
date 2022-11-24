@@ -18,6 +18,7 @@ const memberStore = {
     isValidToken: false,
     isRegisterError: false,
     isDuplicatedId: false,
+    isAdmin: false,
   },
   getters: {
     checkUserInfo: function (state) {
@@ -40,6 +41,9 @@ const memberStore = {
     SET_USER_INFO: (state, userInfo) => {
       state.isLogin = true;
       state.userInfo = userInfo;
+    },
+    SET_IS_ADMIN: (state, isAdmin) => {
+      state.isAdmin = isAdmin;
     },
     SET_IS_REGISTER_ERROR: (state) => {
       state.isRegisterError = true;
@@ -108,7 +112,9 @@ const memberStore = {
           console.log("data is" + JSON.stringify(data.userInfo));
           if (data.message === "success") {
             commit("SET_USER_INFO", data.userInfo);
-            // console.log("3. getUserInfo data >> ", data);
+            if (data.userInfo.userRole == "admin") {
+              commit("SET_IS_ADMIN", true);
+            }
           } else {
             console.log("유저 정보 없음!!!!");
           }
@@ -173,6 +179,7 @@ const memberStore = {
         ({ data }) => {
           if (data.message === "success") {
             commit("SET_IS_LOGIN", false);
+            commit("SET_IS_ADMIN", false);
             commit("SET_USER_INFO", null);
             commit("SET_IS_VALID_TOKEN", false);
           } else {

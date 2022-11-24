@@ -7,8 +7,8 @@
     <!--검색 carousel 끝 -->
     <!--게시판 시작-->
     <div class="display-1 my-5 mb-3">Admin Dashboard</div>
-    <div class="justify-content-center col-md-12 mt-5 border" id="useComponent">
-      <div class="row row-cols-4 col-md-15 my-4 border justify-content-center">
+    <div class="justify-content-center col-md-12 mt-5" id="useComponent">
+      <div class="row row-cols-4 col-md-15 my-4 justify-content-center">
         <div class="rounded" id="totalUser">
           <admin-total-user />
         </div>
@@ -21,7 +21,7 @@
       </div>
 
       <div
-        class="row row-cols-3 col-md-13 border justify-content-center"
+        class="row row-cols-3 col-md-13 justify-content-center"
         id="chartComponents"
       >
         <div class="rounded border mx-5" id="graph">

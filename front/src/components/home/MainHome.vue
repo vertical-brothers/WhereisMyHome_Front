@@ -90,6 +90,7 @@
 import { mapMutations, mapState } from "vuex";
 import { listArticle } from "@/api/board.js";
 import { searchRecentReview } from "@/api/apartmentReview.js";
+import { addSearchLog } from "@/api/log.js";
 import ArticleItem from "@/components/board/ArticleItemForMain.vue";
 import ReviewCard from "@/components/apt/review/apartmentReviewCard.vue";
 
@@ -152,11 +153,30 @@ export default {
         alert("카테고리를 설정해주세요!");
         return;
       }
+      this.logSearchKeyword(this.selected, this.keyword);
       this.goSearch();
     },
     goSearch() {
       this.SET_SEARCH([this.selected, this.keyword]);
       this.$router.push({ name: "apt" });
+    },
+    // 검색 기록 로깅
+    logSearchKeyword(category, keyword) {
+      let searchlog = {
+        log_id: "",
+        log_date: "",
+        keyword: keyword,
+        category: category,
+      };
+      addSearchLog(
+        searchlog,
+        ({ data }) => {
+          console.log("검색 로그 저장 결과 : ", data);
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
     },
   },
   computed: {

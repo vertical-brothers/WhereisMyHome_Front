@@ -1,4 +1,5 @@
 import { apiInstance } from "@/api/index.js";
+import axios from "axios";
 
 const api = apiInstance();
 // const house = apiInstance();
@@ -32,4 +33,21 @@ function getLoginLog(success, fail) {
 function getUserCount(success, fail) {
   api.get(`/user/count`).then(success).catch(fail);
 }
-export { addLog, getLog, getUserCount, addLoginLog, getLoginLog };
+
+async function addSearchLog(searchLog, success, fail) {
+  //api.post(`/log/apartSearchLog`, searchLog).then(success).catch(fail);
+  await axios
+    .post(
+      `http://localhost:8080/whereismyhome/log/apartSearchLog`,
+      JSON.stringify(searchLog),
+      {
+        // json을 json타입의 text로 변환
+        headers: {
+          "Content-Type": `application/json`, // application/json 타입 선언
+        },
+      }
+    )
+    .then(success)
+    .catch(fail);
+}
+export { addLog, getLog, getUserCount, addLoginLog, getLoginLog, addSearchLog };

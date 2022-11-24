@@ -278,6 +278,7 @@
 <script>
 import { mapState, mapMutations, mapActions } from "vuex";
 import { checkStar, writeStarApi, deleteStar } from "@/api/star.js";
+import { addSearchLog } from "@/api/log.js";
 import ReviewModal from "@/components/apt/info/ReviewModal.vue";
 import WriteModal from "@/components/apt/info/WriteModal.vue";
 import { addLog } from "@/api/log.js";
@@ -379,6 +380,8 @@ export default {
         alert("검색 키워드를 입력해주세요.");
         return;
       }
+      // 검색 로깅
+      this.logSearchKeyword(this.searchOption, this.searchKeyword);
     },
     // 검색조건 받아서 마커생성 함수 호출
     // 검색조건 있을때만 동작
@@ -730,6 +733,23 @@ export default {
           })
         );
       }
+    },
+    logSearchKeyword(category, keyword) {
+      let searchlog = {
+        log_id: "",
+        log_date: "",
+        keyword: keyword,
+        category: category,
+      };
+      addSearchLog(
+        searchlog,
+        ({ data }) => {
+          console.log("검색 로그 저장 결과 : ", data);
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
     },
   },
   computed: {

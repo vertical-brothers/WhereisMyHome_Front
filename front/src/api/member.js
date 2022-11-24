@@ -69,4 +69,41 @@ async function idcheck(userId, success, fail) {
   await api.get(`/user/idcheck/${userId}`).then(success).catch(fail);
 }
 
-export { login, findById, tokenRegeneration, logout, join, idcheck };
+// 회원 업데이트
+// 22.11.24 장한결
+async function updateApi(user, success, fail) {
+  await axios
+    .put(`http://localhost:8080/whereismyhome/user/`, JSON.stringify(user), {
+      // json을 json타입의 text로 변환
+      headers: {
+        "Content-Type": `application/json`, // application/json 타입 선언
+      },
+    })
+    .then(success)
+    .catch(fail);
+}
+
+// 회원 삭제
+// 22.11.24 장한결
+async function deleteUserApi(userId, success, fail) {
+  await axios
+    .delete(`http://localhost:8080/whereismyhome/user/${userId}`, {
+      // json을 json타입의 text로 변환
+      headers: {
+        "Content-Type": `application/json`, // application/json 타입 선언
+      },
+    })
+    .then(success)
+    .catch(fail);
+}
+
+export {
+  login,
+  findById,
+  tokenRegeneration,
+  logout,
+  join,
+  idcheck,
+  updateApi,
+  deleteUserApi,
+};

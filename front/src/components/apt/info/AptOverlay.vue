@@ -246,6 +246,7 @@
               <h4 class="fw-bold">실거래가</h4>
               <div class="col-md-2"></div>
             </div>
+            <line-chart></line-chart>
             <table class="table mb-2">
               <thead>
                 <th class="col-md-2">거래년</th>
@@ -281,6 +282,7 @@ import { checkStar, writeStarApi, deleteStar } from "@/api/star.js";
 import { addSearchLog } from "@/api/log.js";
 import ReviewModal from "@/components/apt/info/ReviewModal.vue";
 import WriteModal from "@/components/apt/info/WriteModal.vue";
+import LineChart from "@/components/apt/info/LineChart.vue";
 import { addApartLog } from "@/api/log.js";
 const aptDetailStore = "aptDetailStore";
 const mainStore = "mainStore";
@@ -338,6 +340,7 @@ export default {
   components: {
     ReviewModal,
     WriteModal,
+    LineChart,
   },
   methods: {
     ...mapMutations(aptDetailStore, [

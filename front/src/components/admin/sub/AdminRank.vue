@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="my-2 mb-1">주간 아파트 검색 횟수</div>
+    <div class="my-2 mb-1">주간 아파트 클릭 횟수</div>
     <Bar
       :chart-options="chartOptions"
       :chart-data="chartDataV2"
@@ -100,7 +100,7 @@ export default {
         ({ data }) => {
           this.response = data;
           for (let i = 0; i < this.response.length; i++) {
-            this.chartDataV2.labels.push(this.response[i].aptCode);
+            this.chartDataV2.labels.push(this.response[i].apartmentName);
             this.chartDataV2.datasets[0].data.push(this.response[i].cnt);
           }
         },

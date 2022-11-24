@@ -209,6 +209,7 @@
             <!-- 실거래가 카드 시작 -->
             <div class="row">
               <h4 class="fw-bold">실거래가</h4>
+              <line-chart></line-chart>
               <div class="col-md-2"></div>
             </div>
             <table class="table mb-2">
@@ -245,6 +246,7 @@ import { mapState, mapMutations, mapActions } from "vuex";
 import { checkStar } from "@/api/star.js";
 import ReviewModal from "@/components/apt/info/ReviewModal.vue";
 import WriteModal from "@/components/apt/info/WriteModal.vue";
+import LineChart from "@/components/apt/info/LineChart.vue";
 // import axios from "axios";
 // import { API_BASE_URL } from "@/config";
 const starDetailStore = "starDetailStore";
@@ -285,6 +287,7 @@ export default {
   components: {
     ReviewModal,
     WriteModal,
+    LineChart,
   },
   beforeMount() {
     if (this.markers) {
@@ -295,6 +298,15 @@ export default {
       this.CLEAR_HOUSE;
     }
     // this.CLEAR_HOUSE;
+  },
+  mounted() {
+    for (let i = 0; i < 50; i++) {
+      this.chartData.labels.push(this.deallist[i].dealYear);
+      this.chartData.datasets[0].data.push(
+        parseInt(this.deallist[i].dealAmount.replace(",", ""))
+      );
+      console.log("차트데이터 확인", parseInt(this.deallist[i].dealAmount));
+    }
   },
   methods: {
     ...mapMutations(starDetailStore, [

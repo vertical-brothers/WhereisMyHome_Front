@@ -52,6 +52,10 @@ async function logout(userid, success, fail) {
   await api.get(`/user/logout/${userid}`).then(success).catch(fail);
 }
 
+async function getList(success, fail) {
+  await api.get(`/user/`).then(success).catch(fail);
+}
+
 async function join(user, success, fail) {
   await axios
     .post(`http://localhost:8080/whereismyhome/user/`, JSON.stringify(user), {
@@ -69,4 +73,4 @@ async function idcheck(userId, success, fail) {
   await api.get(`/user/idcheck/${userId}`).then(success).catch(fail);
 }
 
-export { login, findById, tokenRegeneration, logout, join, idcheck };
+export { login, findById, tokenRegeneration, logout, join, idcheck, getList };

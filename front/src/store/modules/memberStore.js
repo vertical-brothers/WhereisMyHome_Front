@@ -7,6 +7,7 @@ import {
   logout,
   join,
   idcheck,
+  getList,
 } from "@/api/member";
 
 const memberStore = {
@@ -19,6 +20,7 @@ const memberStore = {
     isRegisterError: false,
     isDuplicatedId: false,
     isAdmin: false,
+    list: [],
   },
   getters: {
     checkUserInfo: function (state) {
@@ -44,6 +46,9 @@ const memberStore = {
     },
     SET_IS_ADMIN: (state, isAdmin) => {
       state.isAdmin = isAdmin;
+    },
+    SET_LIST: (state, list) => {
+      state.list = list;
     },
     SET_IS_REGISTER_ERROR: (state) => {
       state.isRegisterError = true;
@@ -185,6 +190,16 @@ const memberStore = {
           } else {
             console.log("유저 정보 없음!!!!");
           }
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    },
+    async userList({ commit }) {
+      await getList(
+        ({ data }) => {
+          commit("SET_LIST", data);
         },
         (error) => {
           console.log(error);

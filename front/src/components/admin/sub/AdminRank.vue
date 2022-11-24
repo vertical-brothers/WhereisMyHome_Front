@@ -77,19 +77,13 @@ export default {
         labels: [],
         datasets: [
           {
+            label: "클릭 수",
             backgroundColor: ["#41B883", "#E46651", "#00D8FF", "#DD1B16"],
             data: [],
           },
         ],
       },
-      chartData: {
-        labels: ["January", "February", "March"],
-        datasets: [
-          {
-            data: [40, 20, 12],
-          },
-        ],
-      },
+
       chartOptions: {
         responsive: true,
       },

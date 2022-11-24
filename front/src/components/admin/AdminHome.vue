@@ -8,7 +8,10 @@
     <!--게시판 시작-->
     <div class="display-1 my-5 mb-3">Admin Dashboard</div>
     <div class="justify-content-center col-md-12 mt-5" id="useComponent">
-      <div class="row row-cols-4 col-md-15 my-4 justify-content-center">
+      <div class="justify-content-center col-md-12 row">
+        <admin-user-search />
+      </div>
+      <div class="row row-cols-4 col-md-12 my-4 justify-content-center">
         <div class="rounded" id="totalUser">
           <admin-total-user />
         </div>
@@ -52,6 +55,7 @@ import AdminLoginTime from "./sub/AdminLoginTime.vue";
 import AdminAllKeyword from "@/components/admin/sub/AdminAllKeyword.vue";
 import AdminDailyKeyword from "@/components/admin/sub/AdminDailyKeyword.vue";
 import AdminRank from "@/components/admin/sub/AdminRank.vue";
+import AdminUserSearch from "@/components/admin/sub/AdminUserSearch.vue";
 
 export default {
   components: {
@@ -61,6 +65,7 @@ export default {
     AdminRank,
     AdminAllKeyword,
     AdminDailyKeyword,
+    AdminUserSearch,
   },
   name: "AdminHome",
 

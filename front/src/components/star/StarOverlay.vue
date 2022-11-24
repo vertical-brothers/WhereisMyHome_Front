@@ -1,12 +1,8 @@
 <template>
-  <div id="_overlay" class="col-12 d-flex justify-content-end">
+  <div id="_overlay" class="col-md-12" @click="close">
     <review-modal></review-modal>
     <write-modal></write-modal>
-    <div
-      id="_overlayleftend"
-      class="col-md-5 d-flex flex-column mt-3"
-      @click="close"
-    >
+    <div id="_overlayleftend" class="col-md-5 mt-3" @click="close">
       <div class="row">
         <div class="col">
           <!-- 마트버튼 -->
@@ -102,8 +98,8 @@
         </div>
       </div>
     </div>
-    <div class="col-md-3" @click="close"></div>
-    <div id="_overlayrightend" class="col-md-4 d-flex flex-column mt-3">
+    <div class="col-md-1" @click="close"></div>
+    <div id="_overlayrightend" class="col-md-4 d-flex flex-column ms-3 mt-3">
       <!-- 우측 오버레이 아파트정보칸 시작 -->
       <div
         v-if="house"

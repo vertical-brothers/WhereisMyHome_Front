@@ -42,7 +42,7 @@
             </button>
           </router-link>
           <button
-            v-if="userInfo.userName == userId"
+            v-if="userInfo != null && userInfo.userName == userId"
             type="button"
             id="btn-mv-modify"
             class="btn btn-outline-success mb-3 ms-1"
@@ -51,7 +51,7 @@
             글수정
           </button>
           <button
-            v-if="userInfo.userRole == 1"
+            v-if="userInfo != null && userInfo.userRole == 1"
             type="button"
             id="btn-delete"
             class="btn btn-outline-danger mb-3 ms-1"
@@ -60,7 +60,7 @@
             글삭제
           </button>
           <button
-            v-if="userInfo.userRole == 'admin'"
+            v-if="userInfo != null && userInfo.userRole == 'admin'"
             type="button"
             id="btn-delete"
             class="btn btn-outline-danger mb-3 ms-1"
@@ -69,7 +69,7 @@
             글삭제
           </button>
           <button
-            v-else-if="userInfo.userName == userId"
+            v-else-if="userInfo != null && userInfo.userName == userId"
             type="button"
             id="btn-delete"
             class="btn btn-outline-danger mb-3 ms-1"

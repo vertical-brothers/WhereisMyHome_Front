@@ -159,6 +159,7 @@
               ></b-icon>
             </div>
             <div style="height: 350px; overflow: scroll">
+              <div v-if="!reviews || reviews.length <= 0">리뷰 없음.</div>
               <div v-for="review in reviews" :key="review.id" class="card mb-3">
                 <div class="card-header row">
                   <b-icon

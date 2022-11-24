@@ -64,6 +64,21 @@
               ></b-nav-item
             >
           </div>
+          <div v-b-hover="adminHandleHover">
+            <b-nav-item href="#" class="nav-item" v-if="isAdmin"
+              ><router-link :to="{ name: 'admin' }" class="nav-link"
+                ><b-icon
+                  v-if="isStarHovered"
+                  animation="throb"
+                  icon="graph-up"
+                  scale="1.5"
+                  font-scale="2"
+                ></b-icon
+                ><b-icon v-else icon="graph-up" font-scale="2"></b-icon> 관리자
+                페이지</router-link
+              ></b-nav-item
+            >
+          </div>
         </b-navbar-nav>
         <!-- after login -->
         <b-navbar-nav class="ml-auto" v-if="userInfo">
@@ -117,10 +132,11 @@ export default {
       isBoardHovered: false,
       isTradeHovered: false,
       isStarHovered: false,
+      isAdminHovered: false,
     };
   },
   computed: {
-    ...mapState(memberStore, ["isLogin", "userInfo"]),
+    ...mapState(memberStore, ["isLogin", "userInfo", "isAdmin"]),
     ...mapGetters(["checkUserInfo"]),
   },
   created() {},
@@ -133,6 +149,9 @@ export default {
     },
     starHandleHover(hovered) {
       this.isStarHovered = hovered;
+    },
+    adminHandleHover(hovered) {
+      this.isAdminHovered = hovered;
     },
     ...mapActions(memberStore, ["userLogout"]),
     // ...mapMutations(memberStore, ["SET_IS_LOGIN", "SET_USER_INFO"]),

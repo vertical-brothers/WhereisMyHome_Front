@@ -35,11 +35,37 @@ async function getUserCount(success, fail) {
 }
 
 async function addSearchLog(searchLog, success, fail) {
-  //api.post(`/log/apartSearchLog`, searchLog).then(success).catch(fail);
   await axios
     .post(
       `http://localhost:8080/whereismyhome/log/apartSearchLog`,
       JSON.stringify(searchLog),
+      {
+        // json을 json타입의 text로 변환
+        headers: {
+          "Content-Type": `application/json`, // application/json 타입 선언
+        },
+      }
+    )
+    .then(success)
+    .catch(fail);
+}
+
+async function getSearchAllLog(success, fail) {
+  await axios
+    .get(`http://localhost:8080/whereismyhome/log/apartSearchLog/all`, {
+      // json을 json타입의 text로 변환
+      headers: {
+        "Content-Type": `application/json`, // application/json 타입 선언
+      },
+    })
+    .then(success)
+    .catch(fail);
+}
+async function getSearchDayLog(success, fail) {
+  await axios
+    .get(
+      `http://localhost:8080/whereismyhome/log/apartSearchLog/today`,
+
       {
         // json을 json타입의 text로 변환
         headers: {
@@ -57,4 +83,6 @@ export {
   addLoginLog,
   getLoginLog,
   addSearchLog,
+  getSearchAllLog,
+  getSearchDayLog,
 };

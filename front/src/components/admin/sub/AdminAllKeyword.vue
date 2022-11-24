@@ -1,9 +1,9 @@
 <template>
   <div>
-    <div class="my-2 mb-1">주간 아파트 검색 횟수</div>
-    <Bar
+    <div class="my-2 mb-1">주간 검색 키워드</div>
+    <Doughnut
       :chart-options="chartOptions"
-      :chart-data="chartDataV2"
+      :chart-data="chartData"
       :chart-id="chartId"
       :dataset-id-key="datasetIdKey"
       :plugins="plugins"
@@ -16,14 +16,14 @@
 </template>
 
 <script>
-import { getApartLog } from "@/api/log.js";
-import { Bar } from "vue-chartjs";
+import { getSearchAllLog } from "@/api/log.js";
+import { Doughnut } from "vue-chartjs";
 import {
   Chart as ChartJS,
   Title,
   Tooltip,
   Legend,
-  BarElement,
+  ArcElement,
   CategoryScale,
   LinearScale,
 } from "chart.js";
@@ -32,18 +32,18 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
-  BarElement,
+  ArcElement,
   CategoryScale,
   LinearScale
 );
 
 export default {
-  name: "AdminRanki",
-  components: { Bar },
+  name: "AdminAllKeyword",
+  components: { Doughnut },
   props: {
     chartId: {
       type: String,
-      default: "bar-chart",
+      default: "doughnut-chart",
     },
     datasetIdKey: {
       type: String,
@@ -51,11 +51,11 @@ export default {
     },
     width: {
       type: Number,
-      default: 500,
+      default: 200,
     },
     height: {
       type: Number,
-      default: 500,
+      default: 200,
     },
     cssClasses: {
       default: "",
@@ -72,21 +72,16 @@ export default {
   },
   data() {
     return {
-      response: null,
-      chartDataV2: {
+      // chartData: {
+      //   labels: ["January", "February", "March"],
+      //   datasets: [{ data: [40, 20, 12] }],
+      // },
+      chartData: {
         labels: [],
         datasets: [
           {
             backgroundColor: ["#41B883", "#E46651", "#00D8FF", "#DD1B16"],
             data: [],
-          },
-        ],
-      },
-      chartData: {
-        labels: ["January", "February", "March"],
-        datasets: [
-          {
-            data: [40, 20, 12],
           },
         ],
       },
@@ -96,21 +91,18 @@ export default {
     };
   },
   created() {
-    this.getData();
-    console.log("test", this.chartDataV2);
-  },
-  mounted() {
-    //this.getData();
-    //console.log("test", this.chartDataV2);
+    this.getAllData();
+    console.log("all data is", this.chartData);
   },
   methods: {
-    async getData() {
-      await getApartLog(
+    async getAllData() {
+      await getSearchAllLog(
         ({ data }) => {
           this.response = data;
+          console.log("response is", data);
           for (let i = 0; i < this.response.length; i++) {
-            this.chartDataV2.labels.push(this.response[i].aptCode);
-            this.chartDataV2.datasets[0].data.push(this.response[i].cnt);
+            this.chartData.labels.push(this.response[i].keyword);
+            this.chartData.datasets[0].data.push(this.response[i].searchCount);
           }
         },
         (error) => {

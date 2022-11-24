@@ -4,7 +4,7 @@
     <div class="carousel-inner" style="background-color: rgb(54, 54, 54)">
       <div class="carousel-item active">
         <img
-          style="object-fit: cover"
+          style="object-fit: cover; filter: brightness(50%)"
           src="@/assets/home_apartment.jpg"
           class="d-block w-100"
           height="400"

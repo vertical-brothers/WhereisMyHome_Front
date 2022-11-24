@@ -280,7 +280,7 @@ import { mapState, mapMutations, mapActions } from "vuex";
 import { checkStar, writeStarApi, deleteStar } from "@/api/star.js";
 import ReviewModal from "@/components/apt/info/ReviewModal.vue";
 import WriteModal from "@/components/apt/info/WriteModal.vue";
-import { addLog } from "@/api/log.js";
+import { addApartLog } from "@/api/log.js";
 const aptDetailStore = "aptDetailStore";
 const mainStore = "mainStore";
 const aptReviewStore = "aptReviewStore";
@@ -439,7 +439,7 @@ export default {
         // 그 후 지도 중심 이동
         kakao.maps.event.addListener(this.markerLocal[i], "click", () => {
           console.log("add log start");
-          addLog(
+          addApartLog(
             h.aptCode,
             ({ data }) => {
               console.log("로그 추가", data);

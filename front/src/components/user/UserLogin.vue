@@ -56,7 +56,7 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
-
+import { addLoginLog } from "@/api/log.js";
 const memberStore = "memberStore";
 
 export default {
@@ -78,6 +78,14 @@ export default {
     async confirm() {
       await this.userConfirm(this.memberDto);
       let token = sessionStorage.getItem("access-token");
+      addLoginLog(
+        ({ data }) => {
+          console.log("login log 수집", data);
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
       // console.log("1. confirm() token >> " + token);
       console.log("userid is");
       if (this.isLogin) {

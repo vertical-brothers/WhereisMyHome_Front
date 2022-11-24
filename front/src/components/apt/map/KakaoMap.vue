@@ -7,7 +7,7 @@
 import { KAKAO_MAP_KEY } from "@/config";
 import { mapActions, mapMutations, mapState } from "vuex";
 import { checkStar, writeStarApi, deleteStar } from "@/api/star.js";
-import { addLog } from "@/api/log.js";
+import { addApartLog } from "@/api/log.js";
 const aptDetailStore = "aptDetailStore";
 const mainStore = "mainStore";
 const aptReviewStore = "aptReviewStore";
@@ -200,7 +200,7 @@ export default {
         // 클릭시 화면 우측 오버레이 생성 이벤트 부착
         // 그 후 지도 중심 이동
         kakao.maps.event.addListener(this.markerLocal[i], "click", () => {
-          addLog(
+          addApartLog(
             h.aptCode,
             ({ data }) => {
               console.log("로그 추가", data);

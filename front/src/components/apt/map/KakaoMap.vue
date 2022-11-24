@@ -31,17 +31,16 @@ export default {
         starNo: "",
         userId: "",
       },
+      houseListForStart: null,
     };
+  },
+  beforeCreated() {
+    this.aptList = this.$route.params.data;
   },
   mounted() {
     // const script = document.createElement(script);
-    //console.log(this.searchKeyword);
     this.loadMap();
     this.loadMarkers();
-  },
-
-  created() {
-    this.aptList = this.$route.params.data;
   },
   methods: {
     ...mapActions(aptDetailStore, [
@@ -56,6 +55,7 @@ export default {
       "CLEAR_HOUSE_LIST",
       "SET_IS_STAR_APARTMENT",
       "CLEAR_IS_STAR_APARTMENT",
+      "SET_HOUSE_LIST",
     ]),
     ...mapMutations(mainStore, [
       "CLEAR_SEARCH",
@@ -103,6 +103,11 @@ export default {
         }
       );
     },
+    async sethouseListForStart() {
+      await this.detailHouse(this.searchKeyword);
+      this.houseListForStart = [this.house];
+      this.CLEAR_HOUSE();
+    },
     // map객체에 마커 띄우는 함수
     // input : map object (null입력시 마커 삭제됨.)
     // 22.11.18 장한결
@@ -135,8 +140,8 @@ export default {
     async loadMarkers() {
       // 1. 마커 전부 제거
       this.setMarkers(null);
-      this.CLEAR_MARKER;
-      this.CLEAR_HOUSE_LIST;
+      this.CLEAR_MARKERS();
+      this.CLEAR_HOUSE_LIST();
       console.log(
         "검색 옵션",
         this.searchOption,
@@ -158,6 +163,16 @@ export default {
           await this.getHouseListByDongname(this.searchKeyword);
           this.createMarkers();
           this.setMarkers(this.map);
+          this.CLEAR_SEARCH;
+          // 검색 조건 아파트코드
+        } else if (this.searchOption === "aptCode") {
+          await this.sethouseListForStart();
+          console.log("집집", this.house);
+          console.log("코드검색", this.houseListForStart);
+          this.SET_HOUSE_LIST(this.houseListForStart);
+          this.createMarkers();
+          this.setMarkers(this.map);
+          console.log("키워드", this.searchKeyword);
           this.CLEAR_SEARCH;
         }
         if (this.houselist.length > 0) {
@@ -280,7 +295,7 @@ export default {
       "markers",
       "isMartShow",
     ]),
-    ...mapState(aptDetailStore, ["houselist", "isStarApartment"]),
+    ...mapState(aptDetailStore, ["houselist", "isStarApartment", "house"]),
   },
 };
 </script>

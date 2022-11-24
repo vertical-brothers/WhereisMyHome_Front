@@ -109,7 +109,6 @@ const aptDetailStore = {
         aptCode,
         ({ data }) => {
           commit("SET_DEAL_LIST", data);
-          console.log("거래정보 수집", data);
         },
         (error) => {
           console.log(error);

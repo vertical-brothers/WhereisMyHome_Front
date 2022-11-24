@@ -290,10 +290,10 @@ export default {
   beforeMount() {
     if (this.markers) {
       this.setMarkers(this.markers, null);
-      this.CLEAR_MARKER;
+      this.CLEAR_MARKER();
     }
     if (this.house) {
-      this.CLEAR_HOUSE;
+      this.CLEAR_HOUSE();
     }
   },
   mounted() {
@@ -346,7 +346,11 @@ export default {
       "SET_IS_STAR_APARTMENT",
       "CLEAR_IS_STAR_APARTMENT",
     ]),
-    ...mapMutations(mainStore, ["CLEAR_SEARCH, SET_SEARCH", "SET_MARKERS"]),
+    ...mapMutations(mainStore, [
+      "CLEAR_SEARCH, SET_SEARCH",
+      "SET_MARKERS",
+      "CLEAR_MARKERS",
+    ]),
     ...mapActions(aptDetailStore, [
       "detailHouse",
       "getHouseListByAptname",
@@ -382,8 +386,8 @@ export default {
     async loadMarkers() {
       // 1. 마커 전부 제거
       this.setMarkers(this.markers, null);
-      this.CLEAR_MARKER;
-      this.CLEAR_HOUSE_LIST;
+      this.CLEAR_MARKERS();
+      this.CLEAR_HOUSE_LIST();
       console.log(
         "검색 옵션",
         this.searchOption,

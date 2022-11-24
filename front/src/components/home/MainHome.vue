@@ -92,6 +92,7 @@ import { listArticle } from "@/api/board.js";
 import { searchRecentReview } from "@/api/apartmentReview.js";
 import ArticleItem from "@/components/board/ArticleItemForMain.vue";
 import ReviewCard from "@/components/apt/review/apartmentReviewCard.vue";
+
 const mainStore = "mainStore";
 export default {
   name: "MainHome",
@@ -141,6 +142,7 @@ export default {
   },
   methods: {
     ...mapMutations(mainStore, ["SET_SEARCH"]),
+
     search() {
       if (this.keyword == "") {
         alert("검색어를 입력해주세요!");
@@ -150,7 +152,6 @@ export default {
         alert("카테고리를 설정해주세요!");
         return;
       }
-
       this.goSearch();
     },
     goSearch() {

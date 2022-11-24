@@ -3,11 +3,7 @@
     <div class="col-sm-12 d-flex justify-content-center mt-4">
       <div class="row row-cols-3 col-md-10 h-50 w-100" style="height: 400%">
         <!-- <div class="row row-cols-3 h-8 border" style="width: 100%"> -->
-        <div
-          class="rounded border w-20 h-10"
-          id="starlist"
-          style="height: 800px; overflow: scroll"
-        >
+        <div class="rounded border w-20 h-10 list" id="starlist">
           <!-- <h4 class>관심지역 목록</h4> -->
           <table class="table rounded">
             <star-item
@@ -84,7 +80,17 @@ export default {
 </script>
 
 <style scoped>
-#starList {
+.list {
+  height: 900px;
+  width: 500px;
+  border-radius: 10;
+  box-shadow: 5px 5px 5px grey;
   overflow: scroll;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.list::-webkit-scrollbar {
+  display: none; /* Chrome , Safari , Opera */
 }
 </style>

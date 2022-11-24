@@ -4,7 +4,7 @@
     <write-modal></write-modal>
     <div
       id="_overlayleftend"
-      class="col-md-6 d-flex flex-column mt-3"
+      class="col-md-5 d-flex flex-column mt-3"
       @click="close"
     >
       <div class="row">
@@ -103,7 +103,7 @@
       </div>
     </div>
     <div class="col-md-3" @click="close"></div>
-    <div id="_overlayrightend" class="col-md-3 d-flex flex-column me-5 mt-3">
+    <div id="_overlayrightend" class="col-md-4 d-flex flex-column mt-3">
       <!-- 우측 오버레이 아파트정보칸 시작 -->
       <div
         v-if="house"
@@ -345,6 +345,7 @@ export default {
     createMarkers() {
       console.log(this.houselist);
       this.markerLocal = [];
+
       for (var i = 0; i < this.houselist.length; i++) {
         let h = this.houselist[i];
         // 클릭가능한 마커 생성

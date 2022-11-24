@@ -187,6 +187,12 @@ export default {
     // this.marker 생성하는 함수
     // 22.11.18 장한결
     createMarkers() {
+      let houseImageSize = new kakao.maps.Size(30, 30);
+      let houseImageSrc = require("@/assets/mapMarkers/house.png");
+      let markerImage = new kakao.maps.MarkerImage(
+        houseImageSrc,
+        houseImageSize
+      );
       for (var i = 0; i < this.houselist.length; i++) {
         let h = this.houselist[i];
         // 클릭가능한 마커 생성
@@ -195,6 +201,7 @@ export default {
             map: this.map,
             position: new kakao.maps.LatLng(h.lat, h.lng),
             clickable: true,
+            image: markerImage,
           })
         );
         // 클릭시 화면 우측 오버레이 생성 이벤트 부착

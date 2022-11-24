@@ -5,7 +5,7 @@
     <div class="col-md-5" @click="close"></div>
     <div
       id="_overlayleftend"
-      class="col-md-5 d-flex flex-column mt-3"
+      class="col-md-5 d-flex flex-column mt-3 justify-content-start"
       @click="close"
     >
       <div class="row">
@@ -431,6 +431,12 @@ export default {
     createMarkers() {
       console.log(this.houselist);
       this.markerLocal = [];
+      let houseImageSize = new kakao.maps.Size(30, 30);
+      let houseImageSrc = require("@/assets/mapMarkers/house.png");
+      let markerImage = new kakao.maps.MarkerImage(
+        houseImageSrc,
+        houseImageSize
+      );
       for (var i = 0; i < this.houselist.length; i++) {
         let h = this.houselist[i];
         // 클릭가능한 마커 생성
@@ -439,6 +445,7 @@ export default {
             map: this.map,
             position: new kakao.maps.LatLng(h.lat, h.lng),
             clickable: true,
+            image: markerImage,
           })
         );
         // 클릭시 화면 우측 오버레이 생성 이벤트 부착
@@ -574,7 +581,7 @@ export default {
       }
     },
     decideComfort(category) {
-      this.comfortImageSize = new kakao.maps.Size(20, 20);
+      this.comfortImageSize = new kakao.maps.Size(30, 30);
       //this.comfortImageOption = { offset: new kakao.maps.Point(27, 69) };
       // 일단 마커들 다 지움
       for (let i = 0; i < this.comfortMarkers.length; i++) {
@@ -597,7 +604,7 @@ export default {
           this.isSchoolShow = false;
           this.isPharmacyShow = false;
           // 마커이미지 세팅
-          this.comfortImageSrc = require("@/assets/mapMarkers/cart-shopping-solid.svg");
+          this.comfortImageSrc = require("@/assets/mapMarkers/mart.png");
           // 마트마커 ON
           this.isMartShow = true;
         }
@@ -618,7 +625,7 @@ export default {
           this.isSchoolShow = false;
           this.isPharmacyShow = false;
           // 마커이미지 세팅
-          this.comfortImageSrc = require("@/assets/mapMarkers/cart-shopping-solid.svg");
+          this.comfortImageSrc = require("@/assets/mapMarkers/kinder.png");
           // 마트마커 ON
           this.isKinderShow = true;
         }
@@ -639,7 +646,7 @@ export default {
           this.isMartShow = false;
           this.isPharmacyShow = false;
           // 마커이미지 세팅
-          this.comfortImageSrc = require("@/assets/mapMarkers/cart-shopping-solid.svg");
+          this.comfortImageSrc = require("@/assets/mapMarkers/school.png");
           // 마트마커 ON
           this.isSchoolShow = true;
         }
@@ -660,7 +667,7 @@ export default {
           this.isSchoolShow = false;
           this.isPharmacyShow = false;
           // 마커이미지 세팅
-          this.comfortImageSrc = require("@/assets/mapMarkers/cart-shopping-solid.svg");
+          this.comfortImageSrc = require("@/assets/mapMarkers/hospital.png");
           // 마트마커 ON
           this.isHospitalShow = true;
         }
@@ -681,7 +688,7 @@ export default {
           this.isSchoolShow = false;
           this.isMartShow = false;
           // 마커이미지 세팅
-          this.comfortImageSrc = require("@/assets/mapMarkers/cart-shopping-solid.svg");
+          this.comfortImageSrc = require("@/assets/mapMarkers/pharmacy.png");
           // 마트마커 ON
           this.isPharmacyShow = true;
         }

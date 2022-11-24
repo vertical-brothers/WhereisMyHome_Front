@@ -172,7 +172,7 @@ export default {
 
 <style scoped>
 #map {
-  width: 67%;
+  width: 75%;
   height: 87%;
   position: absolute;
 }

@@ -11,19 +11,23 @@
         />
         <div class="carousel-caption d-flex flex-column align-items-center">
           <div class="display-1 mb-3">Happy House</div>
-          <div class="input-group w-75">
+          <div class="input-group w-75 col-md-12">
             <b-form-select
+              size="lg"
               class="form-select form-select-sm ms-10 me-1 w-5"
               v-model="selected"
               :options="options"
             ></b-form-select>
+
             <b-form-input
+              style="width: 70%"
               @keyup.enter="search"
               type="text"
               v-model="keyword"
               class="form-control form-control-lg"
               placeholder="원하시는 건물명 또는 동을 입력해주세요"
             />
+
             <button @click="search" class="btn btn-primary" type="button">
               <b-icon icon="search" variant="info"></b-icon>
             </button>
@@ -34,16 +38,16 @@
     <!--검색 carousel 끝 -->
     <!--게시판 시작-->
     <div class="col-md-12 d-flex justify-content-center mt-4">
-      <div class="row row-cols-3 col-md-10">
-        <div class="rounded" id="board">
+      <div class="row row-cols-3 col-md-12 justify-content-center">
+        <div class="rounded board col-md-3 me-5" id="board">
           <img
-            style="object-fit: cover"
+            style="object-fit: cover; height: 100%"
             src="@/assets/apartImage.gif"
             class="d-block w-90"
           />
         </div>
-        <div id="board">
-          <h4 class="md-3">공지사항</h4>
+        <div class="rounded board col-md-3 me-5">
+          <h2 class="mb-3 fw-bold">공지사항</h2>
           <b-table-simple striped hover small caption-top responsive>
             <colgroup>
               <col style="width: 50%" />
@@ -67,8 +71,8 @@
             </b-tbody>
           </b-table-simple>
         </div>
-        <div id="board" style="overflow: scroll">
-          <h4>최근 리뷰</h4>
+        <div class="rounded board col-md-3" id="_reviewBoard">
+          <h2 class="mb-3 fw-bold">최근 리뷰</h2>
           <div>
             <review-card
               v-for="(review, index) in reviews"
@@ -186,7 +190,7 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style>
 h3 {
   margin: 40px 0 0;
 }
@@ -202,9 +206,16 @@ a {
   color: #42b983;
 }
 
-#board {
-  height: 80%;
+.board {
+  height: 40%;
   border-radius: 10;
   box-shadow: 5px 5px 5px grey;
+  overflow: scroll;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.board::-webkit-scrollbar {
+  display: none; /* Chrome , Safari , Opera */
 }
 </style>

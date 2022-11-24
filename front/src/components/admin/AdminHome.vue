@@ -71,7 +71,6 @@ export default {
 
   data() {
     return {
-      thumbNail: require("@/assets/home_apartment.jpg"),
       keyword: "",
 
       selected: null,

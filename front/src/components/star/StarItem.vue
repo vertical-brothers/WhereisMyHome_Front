@@ -116,11 +116,17 @@ export default {
       if (this.marker) {
         this.marker.setMap(null);
       }
-
+      let houseImageSize = new kakao.maps.Size(50, 50);
+      let houseImageSrc = require("@/assets/mapMarkers/house.png");
+      let markerImage = new kakao.maps.MarkerImage(
+        houseImageSrc,
+        houseImageSize
+      );
       this.markerLocal = new kakao.maps.Marker({
         map: this.map,
         position: new kakao.maps.LatLng(lat, lng),
         clickable: true,
+        image: markerImage,
       });
       this.SET_MARKER(this.markerLocal);
       console.log(this.marker);

@@ -99,7 +99,7 @@
         </b-navbar-nav>
         <!-- before login -->
         <b-navbar-nav class="ml-auto" v-else>
-          <b-nav-item-dropdown left>
+          <b-nav-item-dropdown class="me-5" left>
             <template #button-content>
               <b-icon icon="people" font-scale="2"></b-icon>
             </template>
